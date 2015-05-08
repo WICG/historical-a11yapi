@@ -20,11 +20,11 @@ Please make sure you have HTML5 tidy installed, instead of
 the the one that  ships with *nix systems. You can comfirm this by running:
 
 ```bash 
-tidy --version  #HTML Tidy for HTML5 (experimental) for ...
+tidy5 --version  #HTML Tidy for Mac OS X version 4.9.XX ...
 ```
 Once you have confirmed (make sure you have committed your changes before
 running tidy, as the changes are destructive ... in a good way:)):
 
 ```bash 
-tidy -config tidyconfig.txt -o index.html index.html
+tidy5 -config tidyconfig.txt -o index.html index.html
 ```

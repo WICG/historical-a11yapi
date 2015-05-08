@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Accessibility API</title>
+    <title>
+      Accessibility API
+    </title>
     <meta charset='utf-8'>
-    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
-            async class='remove'></script>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async=""
+    class='remove'>
+</script>
     <script class='remove'>
-      var respecConfig = {
+  var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
           specStatus:           "unofficial",
           // the specification's short name, as in http://www.w3.org/TR/short-name/
@@ -46,20 +49,20 @@
               },
           ],
           // name of the WG
- //         wg:           "None",
+    //         wg:           "None",
 
           // URI of the public WG page
- //         wgURI:        "http://example.org/really-cool-wg",
+    //         wgURI:        "http://example.org/really-cool-wg",
 
           // name (without the @w3c.org) of the public mailing to which comments are due
-//          wgPublicList: "spec-writers-anonymous",
+    //          wgPublicList: "spec-writers-anonymous",
 
           // URI of the patent status for this WG, for Rec-track documents
           // !!!! IMPORTANT !!!!
           // This is important for Rec-track documents, do not copy a patent URI from a random
           // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
           // Team Contact.
-  //        wgPatentURI:  "",
+    //        wgPatentURI:  "",
           // !!!! IMPORTANT !!!! MAKE THE ABOVE BLINK IN YOUR HEAD
       };
     </script>
@@ -67,74 +70,113 @@
   <body>
     <section id='abstract'>
       <p>
-There's number of objectives on the web to improve accessibility and usability support. Web applications want to provide special support for their users, helping them navigate and perceive the content. The browser has a number of add-ons serving to improve accessibility support, for example, the app letting to navigate landmarks on the web page. These tasks require accessibility API similar to what desktop assistive technologies have.
-</p>
-<p>
-Web accessibility API also allows for in-browser automated accessibility testing of web content, i.e. helpful for checking that HTML and other standards in the browser are accessible to all users.
-</p>
-<p>
-On the other hand there's a growing need for making graphical content accessible. These are charts, graphs and other various visual forms that are drawn using HTML canvas or SVG. There's also a tendency to use HTML canvas element in place of DOM because of performance matter, here's an example. All markup in the example is defined in JavaScript and there is a need for a non-DOM accessibility solution to make the content accessible. 
-
+        There's number of objectives on the web to improve accessibility and
+        usability support. Web applications want to provide special support for
+        their users, helping them navigate and perceive the content. The
+        browser has a number of add-ons serving to improve accessibility
+        support, for example, the app letting to navigate landmarks on the web
+        page. These tasks require accessibility API similar to what desktop
+        assistive technologies have.
+      </p>
+      <p>
+        Web accessibility API also allows for in-browser automated
+        accessibility testing of web content, i.e. helpful for checking that
+        HTML and other standards in the browser are accessible to all users.
+      </p>
+      <p>
+        On the other hand there's a growing need for making graphical content
+        accessible. These are charts, graphs and other various visual forms
+        that are drawn using HTML canvas or SVG. There's also a tendency to use
+        HTML canvas element in place of DOM because of performance matter,
+        here's an example. All markup in the example is defined in JavaScript
+        and there is a need for a non-DOM accessibility solution to make the
+        content accessible.
       </p>
     </section>
-    
     <section id='sotd'>
       <p>
         This is a work in progress.
       </p>
-<section>
-<h3>Things we want feedback on!</h3>
-
-<ul>
-  <li>Should we specify hasAnyOf() and hasAllOf() for StateSet and AttributeMap? Or should we just rely on JS's Array interface
-  to do the same thing? Pros:... Cons:....</li>
-  <li>Is it ok to use the term "attributes" for accessible attributes in this spec? or will it cause confusion with DOM attributes? (suggestion is to maybe rename "properties" if it's going to be confusing)</li>
-</ul>
-
-</section>
-
+      <section>
+        <h3>
+          Things we want feedback on!
+        </h3>
+        <ul>
+          <li>Should we specify hasAnyOf() and hasAllOf() for StateSet and
+          AttributeMap? Or should we just rely on JS's Array interface to do
+          the same thing? Pros:... Cons:....
+          </li>
+          <li>Is it ok to use the term "attributes" for accessible attributes
+          in this spec? or will it cause confusion with DOM attributes?
+          (suggestion is to maybe rename "properties" if it's going to be
+          confusing)
+          </li>
+        </ul>
+      </section>
     </section>
-    
     <section>
-      <h2>Accessibility API</h2>
+      <h2>
+        Accessibility API
+      </h2>
       <p>
-The API provides bunch of interfaces that are used to express the semantics of web content in a that assistive technologies (AT) knows how to deal with. In other words, each piece of semantically meaningful content has associated accessible object the AT operates on. </p>
-
-<p>An <dfn>accessible object</dfn> is ... TODO!. This is represented by the <code>AccessibleObject interface</code>. </p>
-
-<p>An <dfn>accessible state</dfn> is... . Accessible states of an accessible object are represented by objects that implment  the <code>StateSet</code> interface. It is a live object, i.e. if the states of the accessible object changes then the object reflects that. Implementation is not required to compute any state until requested. </p>
-
-
-<p>The interfaces allow to receive accessible object properties, traverse the hierarchy, and interact with content.
+        The API provides bunch of interfaces that are used to express the
+        semantics of web content in a that assistive technologies (AT) knows
+        how to deal with. In other words, each piece of semantically meaningful
+        content has associated accessible object the AT operates on.
       </p>
-
- <p>The API Also provides a way to extend existing semantics of the markup, and add new semantics for inaccessible content like drawings made using the <code>canvas</code> element. </p>
-
-   </section>
-
-<section>
-<h2>Extensions to the <code>Node</code> interface</h2>
-
-<p>Assistive technology, or the developer, can request an <a>accessible object</a> from a [[!DOM]] <code>Node</code> if the <code>Node</code> is accessible, i.e. it expresses meaningful semantics to the assistive technology.</p>
-
-<p>A <code>Node</code> is accessible if it has an accessible object.</p>
-
-<pre class="idl">
+      <p>
+        An <dfn>accessible object</dfn> is ... TODO!. This is represented by
+        the <code>AccessibleObject interface</code>.
+      </p>
+      <p>
+        An <dfn>accessible state</dfn> is... . Accessible states of an
+        accessible object are represented by objects that implment the
+        <code>StateSet</code> interface. It is a live object, i.e. if the
+        states of the accessible object changes then the object reflects that.
+        Implementation is not required to compute any state until requested.
+      </p>
+      <p>
+        The interfaces allow to receive accessible object properties, traverse
+        the hierarchy, and interact with content.
+      </p>
+      <p>
+        The API Also provides a way to extend existing semantics of the markup,
+        and add new semantics for inaccessible content like drawings made using
+        the <code>canvas</code> element.
+      </p>
+    </section>
+    <section>
+      <h2>
+        Extensions to the <code>Node</code> interface
+      </h2>
+      <p>
+        Assistive technology, or the developer, can request an <a>accessible
+        object</a> from a [[!DOM]] <code>Node</code> if the <code>Node</code>
+        is accessible, i.e. it expresses meaningful semantics to the assistive
+        technology.
+      </p>
+      <p>
+        A <code>Node</code> is accessible if it has an accessible object.
+      </p>
+      <pre class="idl">
 partial interface Node {
   readonly attribute AccessibleObject? accessibleObject;
 };
 </pre>
-
-<section>
-  <h3><code>accessibleObject</code> attribute</h3>
-  <p>....</p>
-</section>
-</section>
-
-<section>
-<h2>AccessibleObject interface</h2>
-
-<pre class="idl">
+      <section>
+        <h3>
+          <code>accessibleObject</code> attribute
+        </h3>
+        <p>
+          ....
+        </p>
+      </section>
+    </section>
+    <section>
+      <h2>
+        AccessibleObject interface
+      </h2>
+      <pre class="idl">
 interface AccessibleObject {
   attribute DOMString role;
   attribute DOMString name;
@@ -145,7 +187,7 @@ interface AccessibleObject {
 
   readonly attribute AttributeMap attributes;
 
-  sequence&lt;DOMString> getPatterns();
+  sequence&lt;DOMString&gt; getPatterns();
   object toPattern(DOMString type);
 
   readonly attribute RelationMap relations;
@@ -166,132 +208,182 @@ interface AccessibleObject {
   attribute AccessibleSource? source;
 };
 </pre>
-
-<section>
-<h3><code>role</code> attribute</h3>
-<p>The <dfn><code>role</code></dfn> attribute represents the accessible role that is either developer defined or a role as per [[!WAI-ARIA]] (e.g., "button", "menu", "textfield").</p>
-
-</section>
-
-
-<section>
-<h3><code>name</code> attribute</h3>
-<p>The <dfn><code>name</code></dfn> attribute represents ... </p>
-<p>When setting, ... </p>
-</section>
-
-<section>
-<h3><code>description</code> attribute</h3>
-<p>The <dfn><code>description</code></dfn> attribute ... </p>
-<p>When setting, ... </p>
-</section>
-
-<section>
-<h3><code>value</code> attribute</h3>
-<p>The <dfn><code>value</code></dfn> attribute ...</p>
-<p>When setting, ... </p>
-</section>
-
-<section>
-<h3><code>states</code> attribute</h3>
-<p>The <dfn><code>value</code></dfn> attribute represents the accessible states...</p>
-</section>
-
-<section>
-<h3><code>attributes</code> attribute</h3>
-<p>The <dfn><code>attributes</code></dfn> attribute represents ...</p>
-
-<p>The accessible object can support a number of attributes to express the semantics that cannot be described by base properties of an accessible object.</p>
-
-<p>Returns a <code>AttributeMap</code> for all object attributes exposed on the accessible element. If accessible element attributes are changed then the object reflects the actual state of attributes. The implementation is not required to pre-compute any of the attributes.</p>
-
-<div class="note">
-<p>Set of exposed attributes depends on semantics of the [[!DOM]] element. As an example, typical attributes are:</p>
-<dl>
-<dt>DOMString autocomplete:</dt>
-<dd>Exposed on text fields. Values are list, none, inline, both.</dd>
-
-<dt>DOMString live:</dt>
-<dd>Points that the accessible is live region. Values are assertive and polite. </dd>
-
-<dt>DOMString relevant:</dt>
-<dd>Lists all notifications that qualifies for live region. </dd>
-</dl>
-
-</div>
-
-</section>
-
-<section>
-<h3><code></code> attribute</h3>
-</section>
-
-<section>
-<h3><code></code> attribute</h3>
-</section>
-<section>
-<h3><code></code> attribute</h3>
-</section>
-
-<section>
-<h3><code></code> attribute</h3>
-</section>
-
-</section>
-
-
-<section>
-<h2><code>StateSet</code> interface</h2>
-<p>live object for all accessible states of an accessible object.</p>
-<p class="issue">Describe why live?</p>
-
-<pre class="idl">
+      <section>
+        <h3>
+          <code>role</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>role</code></dfn> attribute represents the accessible
+          role that is either developer defined or a role as per [[!WAI-ARIA]]
+          (e.g., "button", "menu", "textfield").
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>name</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>name</code></dfn> attribute represents ...
+        </p>
+        <p>
+          When setting, ...
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>description</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>description</code></dfn> attribute ...
+        </p>
+        <p>
+          When setting, ...
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>value</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>value</code></dfn> attribute ...
+        </p>
+        <p>
+          When setting, ...
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>states</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>value</code></dfn> attribute represents the accessible
+          states...
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>attributes</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>attributes</code></dfn> attribute represents ...
+        </p>
+        <p>
+          The accessible object can support a number of attributes to express
+          the semantics that cannot be described by base properties of an
+          accessible object.
+        </p>
+        <p>
+          Returns a <code>AttributeMap</code> for all object attributes exposed
+          on the accessible element. If accessible element attributes are
+          changed then the object reflects the actual state of attributes. The
+          implementation is not required to pre-compute any of the attributes.
+        </p>
+        <div class="note">
+          <p>
+            Set of exposed attributes depends on semantics of the [[!DOM]]
+            element. As an example, typical attributes are:
+          </p>
+          <dl>
+            <dt>
+              DOMString autocomplete:
+            </dt>
+            <dd>
+              Exposed on text fields. Values are list, none, inline, both.
+            </dd>
+            <dt>
+              DOMString live:
+            </dt>
+            <dd>
+              Points that the accessible is live region. Values are assertive
+              and polite.
+            </dd>
+            <dt>
+              DOMString relevant:
+            </dt>
+            <dd>
+              Lists all notifications that qualifies for live region.
+            </dd>
+          </dl>
+        </div>
+      </section>
+      <section>
+        <h3>
+          attribute
+        </h3>
+      </section>
+      <section>
+        <h3>
+          attribute
+        </h3>
+      </section>
+      <section>
+        <h3>
+          attribute
+        </h3>
+      </section>
+      <section>
+        <h3>
+          attribute
+        </h3>
+      </section>
+    </section>
+    <section>
+      <h2>
+        <code>StateSet</code> interface
+      </h2>
+      <p>
+        live object for all accessible states of an accessible object.
+      </p>
+      <p class="issue">
+        Describe why live?
+      </p>
+      <pre class="idl">
 interface StateSet {
-  readonly setlike&lt;DOMString>;
+  readonly setlike&lt;DOMString&gt;;
   boolean hasAnyOf(DOMString... states);
   boolean hasAllOf(DOMString... states);
 };
 </pre>
-
-<section class="informative">
- <h3>Example of usage</h3>
-
-<p>Example of a script that logs to console all accessible object states.</p>
-
-<pre class="example highlight">
+      <section class="informative">
+        <h3>
+          Example of usage
+        </h3>
+        <p>
+          Example of a script that logs to console all accessible object
+          states.
+        </p>
+        <pre class="example highlight">
 let accEl = document.getElementById("foo").accessibleObject;
 for (let state of accElm.states) {
   console.log(state);
 }
 </pre>
-
-
-</section>
-
-
-
-</section>
-
-<section>
-<h2><code>AttributeMap</code> interface</h2>
-<p>The <code>AttributeMap</code> is an interface aimed to work with {name, value} pairs of accessible attributes.</p>
-
-<pre class="idl">
+      </section>
+    </section>
+    <section>
+      <h2>
+        <code>AttributeMap</code> interface
+      </h2>
+      <p>
+        The <code>AttributeMap</code> is an interface aimed to work with {name,
+        value} pairs of accessible attributes.
+      </p>
+      <pre class="idl">
 interface AttributeMap {
-  readonly maplike&lt;DOMString, any>;
+  readonly maplike&lt;DOMString, any&gt;;
 
   boolean hasAnyOf(Object map); // Needs more work
   boolean hasAllOf(Object map); // Needs more work
 };
 </pre>
-
-</section>
-
-
+    </section>
     <section class='appendix'>
-      <h2>Acknowledgements</h2>
+      <h2>
+        Acknowledgements
+      </h2>
       <p>
-        Many thanks to Robin Berjon for making our lives so much easier with his cool tool.
+        Many thanks to Robin Berjon for making our lives so much easier with
+        his cool tool.
       </p>
     </section>
   </body>

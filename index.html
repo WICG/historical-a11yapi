@@ -137,6 +137,13 @@
         Implementation is not required to compute any state until requested.
       </p>
       <p>
+        An <dfn>accessible tree</dfn> is ... TODO!..
+      </p>
+      <p>
+        An <dfn>accessible children</dfn> is ... TODO!. This is represented by
+        the <code>AccessibleChildren interface</code>.
+      </p>
+      <p>
         The interfaces allow to receive accessible object properties, traverse
         the hierarchy, and interact with content.
       </p>
@@ -318,8 +325,16 @@ interface AccessibleObject {
       </section>
       <section>
         <h3>
-          attribute
+          <code>children</code> attribute
         </h3>
+        <p>
+          The <dfn><code>children</code></dfn> attribute represents the child
+          accessible objects of this <a>accessible object</a>.
+        </p>
+        <p>
+          Returns <code>AccessibleChildren</code> object containing all child
+          <a title="accessible object">accessilbe objects</a>.
+        </p>
       </section>
       <section>
         <h3>
@@ -379,6 +394,20 @@ interface AttributeMap {
 
   boolean hasAnyOf(Object map); // Needs more work
   boolean hasAllOf(Object map); // Needs more work
+};
+</pre>
+    </section>
+    <section>
+      <h2>
+        <code>AccessibleChildren</code> interface
+      </h2>
+      <p>
+        The <code>AccessibleChildren</code> is an iterable interface aimed to
+        work with child accessible objects.
+      </p>
+      <pre class="idl">
+interface AccessibleChildren {
+  iterable&lt;AccessibleObject&gt;;
 };
 </pre>
     </section>

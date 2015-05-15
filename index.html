@@ -9,7 +9,7 @@
     class='remove'>
     </script>
     <script class='remove'>
-    /*Make tidy happy*/  
+    /*Make tidy happy*/
     var respecConfig = {
           // specification status (e.g. WD, LCWD, WG-NOTE, etc.). If in doubt use ED.
           specStatus:           "unofficial",
@@ -121,36 +121,105 @@
       </h2>
       <p>
         The API provides bunch of interfaces that are used to express the
-        semantics of web content in a that assistive technologies (AT) knows
-        how to deal with. In other words, each piece of semantically meaningful
-        content has associated accessible object the AT operates on.
+        semantics of web content in a way that assistive technologies (AT)
+        knows how to deal with. Also it provides ability to search and traverse
+        the content and interact with it. It has a way to extend existing
+        semantics of the markup, and add new semantics for inaccessible content
+        like drawings made using the <code>canvas</code> element. Each piece of
+        semantic content has an associated accessible object the AT operates
+        on.
       </p>
       <p>
-        An <dfn>accessible object</dfn> is ... TODO!. This is represented by
-        the <code>AccessibleObject interface</code>.
+        An <dfn>assistive technology</dfn> or <dfn>AT</dfn> is a software that
+        provides an improved user experience for different users types
+        including people with disabilities. It can be in the form of desktop or
+        web application or service.
       </p>
       <p>
-        An <dfn>accessible state</dfn> is... . Accessible states of an
-        accessible object are represented by objects that implment the
-        <code>StateSet</code> interface. It is a live object, i.e. if the
-        states of the accessible object changes then the object reflects that.
-        Implementation is not required to compute any state until requested.
+        A <dfn>content entity</dfn> is semantically isolated piece
+        of content. For example, <a>interactive content</a> in [[!HTML]].
       </p>
       <p>
-        An <dfn>accessible tree</dfn> is ... TODO!..
+        An <dfn>accessible object</dfn> is an object expressing the semantics
+        of a content entity. The object is represented by the
+        <code>AccessibleObject interface</code>.
       </p>
       <p>
-        An <dfn>accessible children</dfn> is ... TODO!. This is represented by
-        the <code>AccessibleChildren interface</code>.
+        An <dfn>accessible node</dfn> is a [[!DOM]] <code>Node</code> that has
+        an associated <a>accessible object</a>.
       </p>
       <p>
-        The interfaces allow to receive accessible object properties, traverse
-        the hierarchy, and interact with content.
+        An <dfn>accessible tree</dfn> is a tree of accessible objects
+        associated to each other by a parent-child relationship.
       </p>
       <p>
-        The API Also provides a way to extend existing semantics of the markup,
-        and add new semantics for inaccessible content like drawings made using
-        the <code>canvas</code> element.
+        An <dfn>accessible parent</dfn> of the referred accessible object is
+        its parent in the <a>accessible tree</a>.
+      </p>
+      <p>
+        An <dfn>accessible child</dfn> of the referred <a>accessible object</a>
+        are its child accessible objects in the accessible tree. It is
+        represented by the <code>AccessibleChildren interface</code>.
+      </p>
+      <p>
+        An <dfn>accessible role</dfn> identifies the
+        function of the accessible object to assistive technology
+        (e.g., such as "button", "textbox", etc. See also [[!WAI-ARIA]] roles).
+      </p>
+      <p>
+        An <dfn>accessible name</dfn> is a primary human readable characteristic
+        of an accessible object. It's used to present a content entity, the
+        accessible object is created for, to the user.
+      </p>
+      <p>
+        An <dfn>accessible description</dfn> is secondary human readable
+        characteristic of an accessible object. It's used to describe and provide
+        more detailed information than accessible name to the user about
+        content entity, the accessible object is created for (e.g., a tool tip).
+      </p>
+      <p>
+        An <dfn>accessible value</dfn> is text characteristic of an accessible
+        object created for a control element. It identifies additional information
+        about the control, such as position on a slider or text in an edit
+        field.
+      </p>
+      <p>
+        An <dfn>accessible state</dfn> is a boolean characteristic of an
+        accessible object, that defines whether the accessible object is in a
+        state, for example, if [[!HTML]] <code>button</code> element is focused
+        then its accessible object has <code>focused</code> state. Accessible
+        states of an accessible object are represented by objects that
+        implement the <code>StateSet</code> interface.
+      </p>
+      <p>
+        An <dfn>accessible attribute</dfn> is characteristic of an accessible
+        object that provides extra information. Accessible attributes are
+        represented by objects that implement the <code>AttributeMap</code>
+        interface.
+      </p>
+      <p>
+        An <dfn>accessible pattern</dfn> expresses the
+        associated semantics of the <a>content entity</a> that is not expressed
+        by means of <code>AccessibleObject</code> interface.
+      </p>
+      <p>
+        An <dfn>accessible relation</dfn> is a relation between two or more
+        accessible objects. Each relation has a type that expresses its semantics.
+        An accessible object may support a number of relations of different
+        types. Accessible relations of an accessible objects are presented by
+        objects that implement the <code>RelationMap</code> interface.
+      </p>
+      <p>
+        An <dfn>accessible action</dfn> or <dfn>action</dfn> is an action
+        supported by the <a>content entity</a>. An action can be performed on
+        a content entity by the user. Accessible actions are represented by
+        objects that implement the <code>ActionMap</code> interface.
+      </p>
+      <p>
+        An <dfn>interaction</dfn> is device dependent interaction, such as
+        keyboard shortcut or mouse gesture used to invoke the action.
+        Interactions on an <a>accessible object</a> are represented by objects
+        that implement the <code>InteractionMap</code> interface.
       </p>
     </section>
     <section>
@@ -160,8 +229,7 @@
       <p>
         Assistive technology, or the developer, can request an <a>accessible
         object</a> from a [[!DOM]] <code>Node</code> if the <code>Node</code>
-        is accessible, i.e. it expresses meaningful semantics to the assistive
-        technology.
+        is accessible, i.e. it expresses semantics to the assistive technology.
       </p>
       <p>
         A <code>Node</code> is accessible if it has an accessible object.
@@ -176,7 +244,8 @@ partial interface Node {
           <code>accessibleObject</code> attribute
         </h3>
         <p>
-          ....
+          The <code>accessibleObject</code> attribute the user agent MUST return the accessible object associated with this <code>Node</code> (if any).
+          Otherwise, it returns <code>null</code>.
         </p>
       </section>
     </section>
@@ -203,7 +272,7 @@ interface AccessibleObject {
 
   readonly attribute ActionMap actions;
   void activate(DOMString action);
-  readonly attribute InteractionMap intreactions;
+  readonly attribute InteractionMap interactions;
 
   readonly attribute AccessibleObject? parent;
   readonly attribute AccessibleChildren children;
@@ -329,7 +398,7 @@ interface AccessibleObject {
         </p>
         <p>
           Returns <code>AccessibleChildren</code> object containing all child
-          <a title="accessible object">accessilbe objects</a>.
+          <a title="accessible object">accessible objects</a>.
         </p>
       </section>
       <section>
@@ -348,7 +417,10 @@ interface AccessibleObject {
         <code>StateSet</code> interface
       </h2>
       <p>
-        live object for all accessible states of an accessible object.
+        live object for all accessible states of an accessible object, i.e. if
+        the states of the accessible object changes then the object reflects
+        that. Implementation is not required to compute any state until
+        requested.
       </p>
       <p class="issue">
         Describe why live?
@@ -392,6 +464,16 @@ interface AttributeMap {
   boolean hasAllOf(Object map); // Needs more work
 };
 </pre>
+    </section>
+    <section>
+    <h2>Dependencies</h2>
+    <p>The following definitions are in the [[!HTML]] specification:
+    </p>
+    <ul>
+    <li><a href="http://www.w3.org/TR/html5/dom.html#interactive-content
+"><dfn>interactive content</dfn></a></li>
+     </ul>
+
     </section>
     <section>
       <h2>

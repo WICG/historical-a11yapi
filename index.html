@@ -129,98 +129,149 @@
         semantic content has an associated accessible object the AT operates
         on.
       </p>
-      <p>
-        An <dfn>assistive technology</dfn> or <dfn>AT</dfn> is a software that
-        provides an improved user experience for different users types
-        including people with disabilities. It can be in the form of desktop or
-        web application or service.
-      </p>
-      <p>
-        A <dfn>content entity</dfn> is semantically isolated piece
-        of content. For example, <a>interactive content</a> in [[!HTML]].
-      </p>
-      <p>
-        An <dfn>accessible object</dfn> is an object expressing the semantics
-        of a content entity. The object is represented by the
-        <code>AccessibleObject interface</code>.
-      </p>
-      <p>
-        An <dfn>accessible node</dfn> is a [[!DOM]] <code>Node</code> that has
-        an associated <a>accessible object</a>.
-      </p>
-      <p>
-        An <dfn>accessible tree</dfn> is a tree of accessible objects
-        associated to each other by a parent-child relationship.
-      </p>
-      <p>
-        An <dfn>accessible parent</dfn> of the referred accessible object is
-        its parent in the <a>accessible tree</a>.
-      </p>
-      <p>
-        An <dfn>accessible child</dfn> of the referred <a>accessible object</a>
-        are its child accessible objects in the accessible tree. It is
-        represented by the <code>AccessibleChildren interface</code>.
-      </p>
-      <p>
-        An <dfn>accessible role</dfn> identifies the
-        function of the accessible object to assistive technology
-        (e.g., such as "button", "textbox", etc. See also [[!WAI-ARIA]] roles).
-      </p>
-      <p>
-        An <dfn>accessible name</dfn> is a primary human readable characteristic
-        of an accessible object. It's used to present a content entity, the
-        accessible object is created for, to the user.
-      </p>
-      <p>
-        An <dfn>accessible description</dfn> is secondary human readable
-        characteristic of an accessible object. It's used to describe and provide
-        more detailed information than accessible name to the user about
-        content entity, the accessible object is created for (e.g., a tool tip).
-      </p>
-      <p>
-        An <dfn>accessible value</dfn> is text characteristic of an accessible
-        object created for a control element. It identifies additional information
-        about the control, such as position on a slider or text in an edit
-        field.
-      </p>
-      <p>
-        An <dfn>accessible state</dfn> is a boolean characteristic of an
-        accessible object, that defines whether the accessible object is in a
-        state, for example, if [[!HTML]] <code>button</code> element is focused
-        then its accessible object has <code>focused</code> state. Accessible
-        states of an accessible object are represented by objects that
-        implement the <code>StateSet</code> interface.
-      </p>
-      <p>
-        An <dfn>accessible attribute</dfn> is characteristic of an accessible
-        object that provides extra information. Accessible attributes are
-        represented by objects that implement the <code>AttributeMap</code>
-        interface.
-      </p>
-      <p>
-        An <dfn>accessible pattern</dfn> expresses the
-        associated semantics of the <a>content entity</a> that is not expressed
-        by means of <code>AccessibleObject</code> interface.
-      </p>
-      <p>
-        An <dfn>accessible relation</dfn> is a relation between two or more
-        accessible objects. Each relation has a type that expresses its semantics.
-        An accessible object may support a number of relations of different
-        types. Accessible relations of an accessible objects are presented by
-        objects that implement the <code>RelationMap</code> interface.
-      </p>
-      <p>
-        An <dfn>accessible action</dfn> or <dfn>action</dfn> is an action
-        supported by the <a>content entity</a>. An action can be performed on
-        a content entity by the user. Accessible actions are represented by
-        objects that implement the <code>ActionMap</code> interface.
-      </p>
-      <p>
-        An <dfn>interaction</dfn> is device dependent interaction, such as
-        keyboard shortcut or mouse gesture used to invoke the action.
-        Interactions on an <a>accessible object</a> are represented by objects
-        that implement the <code>InteractionMap</code> interface.
-      </p>
+      <section>
+        <h3>
+          Terms
+        </h3>
+        <p>
+          An <dfn>assistive technology</dfn> or <dfn>AT</dfn> is software
+          that provides an improved user experience for different users types
+          including people with disabilities. It can be in the form of a native
+          application, or web application (e.g., zoom tool), or service
+          (e.g., speech-to-text).
+        </p>
+        <p>
+          A <dfn>content entity</dfn> is semantically isolated piece of
+          content. For example, <a>interactive content</a> in [[!HTML]].
+        </p>
+        <p>
+          An <dfn>accessible object</dfn> is an object expressing the semantics
+          of a <a>content entity</a>. The object is represented by the
+          <code>AccessibleObject</code> interface.
+        </p>
+        <p>
+          A <dfn>role</dfn> of an <a>accessible object</a> identifies the
+          function of the accessible object to assistive technology (e.g., such
+          as "button", "textbox", etc. See also [[!WAI-ARIA]] roles).
+        </p>
+        <p>
+          A <dfn>name</dfn> of an <a>accessible object</a> is a primary human
+          readable property of an accessible object. For example, <a>assistive
+          technology</a> could present the name of the <a>accessible object</a>
+          to the user.
+        </p>
+        <p>
+          A <dfn>description</dfn> of an <a>accessible object</a> is secondary
+          human readable property of an <a>accessible object</a>. It's used to
+          describe and provide more detailed information than <a>name</a>
+          to the user about <a>content entity</a>, the accessible object was
+          created for (e.g., a tool tip).
+        </p>
+        <p>
+          A <dfn>value</dfn> of an <a>accessible object</a> is text
+          property of an <a>accessible object</a> created for a control element.
+          It identifies additional information about the control, such as
+          position on a slider or text in an edit field.
+        </p>
+        <p>
+          An <a>accessible object</a> has a set of <dfn>accessible states</dfn>,
+          which is represented by objects that implement the <code>StateSet</code>
+          interface. Conceptually, each one of these <dfn>states</dfn> is a boolean
+          that represents the state the content entity is currently in.
+          For example, if a [[!HTML]] <code>button</code> element is in the focused state
+          (e.g., the user has focused the button by tabbing to it),
+          then its accessible object will have "<code>focused</code>" state
+          in its <a>accessible states</a>.
+        </p>
+        <p>
+          An <dfn>attribute</dfn> of an <a>accessible object</a> is
+          property that provides extra information about its <a>content entity</a>. Attributes
+          are represented by objects that implement the <code>AttributeMap</code> interface.
+          For example, autocomplete feature on an <code>input</code> element would map to <code>autocomplete</code> attribute with possible values <code>inline</code>, <code>list</code>, or <code>both</code>.
+        </p>
+        <p>
+          A <dfn>pattern</dfn> of an <a>accessible object</a> expresses the
+          associated semantics of the <a>content entity</a> that is not
+          expressed by means of <code>AccessibleObject</code> interface.
+        </p>
+        <p>
+          A <a>accessible object</a> can have one or more <dfn>relations</dfn> to
+          other accessible objects. Each relation has a <dfn>relation type</dfn> 
+          that expresses its semantics. Relations of an accessible
+          objects are represented by objects that implement the
+          <code>RelationMap</code> interface.
+        </p>
+        <p>
+          An <dfn>action</dfn> of an <a>accessible object</a> is an action
+          supported by the <a>content entity</a>. An action can be performed on
+          a content entity by the user (e.g., a button click).
+          Accessible actions are represented by
+          objects that implement the <code>ActionMap</code> interface.
+        </p>
+        <p>
+          An <dfn>interaction</dfn> is device dependent interaction, such as
+          keyboard shortcut or mouse gesture used to invoke the <a>action</a>.
+          Interactions on an <a>accessible object</a> are represented by
+          objects that implement the <code>InteractionMap</code> interface.
+        </p>
+        <p>
+          An <dfn>accessible tree</dfn> is a tree of <a title=
+          "accessible object">accessible objects</a> associated to each other
+          by a parent-child relationship.
+        </p>
+        <p>
+          An <dfn>accessible parent</dfn> of the referred <a>accessible
+          object</a> is its parent in the <a>accessible tree</a>.
+        </p>
+        <p>
+          An <dfn>accessible child</dfn> of the referred <a>accessible
+          object</a> are its child accessible objects in the <a>accessible
+          tree</a>. It is represented by the <code>AccessibleChildren</code>
+          interface.
+        </p>
+        <p>
+          An <dfn>accessible node</dfn> or <dfn>accessible element</dfn> is a
+          [[!DOM]] <code>Node</code> or <code>Element</code> that has an
+          associated <a>accessible object</a>.
+        </p>
+      </section>
+      <section class="informative">
+        <h3>
+          Understanding the terms
+        </h3>
+        <p>Each <a>content entity</a> has an associated <a>accessible
+        object</a>. Each <a>accessible object</a> is described by accessible
+        properties like <a>role</a>, <a>name</a>, <a title=
+        "relation">relations</a> etc.
+        </p>
+        <figure>
+          <img src="images/props.png">
+          <figcaption>
+            Accessible properties.
+          </figcaption>
+        </figure>
+        <p>
+          <a title="accessible object">Accessible object</a> can be related to
+          each other by number of different types.
+        </p>
+        <figure>
+          <img src="images/rels.png">
+          <figcaption>
+            Relations. A color of arrows connecting accessible object represent
+            own relation type.
+          </figcaption>
+        </figure>
+        <p>
+          All <a title="accessible object">accessible objects</a> are organized
+          into <a titile="accessible tree">accessible trees</a>.
+        </p>
+        <figure>
+          <img src="images/tree.png">
+          <figcaption>
+            Accessible tree.
+          </figcaption>
+        </figure>
+      </section>
     </section>
     <section>
       <h2>
@@ -244,8 +295,9 @@ partial interface Node {
           <code>accessibleObject</code> attribute
         </h3>
         <p>
-          The <code>accessibleObject</code> attribute the user agent MUST return the accessible object associated with this <code>Node</code> (if any).
-          Otherwise, it returns <code>null</code>.
+          The <code>accessibleObject</code> attribute the user agent MUST
+          return the accessible object associated with this <code>Node</code>
+          (if any). Otherwise, it returns <code>null</code>.
         </p>
       </section>
     </section>
@@ -466,14 +518,19 @@ interface AttributeMap {
 </pre>
     </section>
     <section>
-    <h2>Dependencies</h2>
-    <p>The following definitions are in the [[!HTML]] specification:
-    </p>
-    <ul>
-    <li><a href="http://www.w3.org/TR/html5/dom.html#interactive-content
-"><dfn>interactive content</dfn></a></li>
-     </ul>
-
+      <h2>
+        Dependencies
+      </h2>
+      <p>
+        The following definitions are in the [[!HTML]] specification:
+      </p>
+      <ul>
+        <li>
+          <a href=
+          "http://www.w3.org/TR/html5/dom.html#interactive-content"><dfn>interactive
+          content</dfn></a>
+        </li>
+      </ul>
     </section>
     <section>
       <h2>

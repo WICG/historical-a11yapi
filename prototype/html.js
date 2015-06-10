@@ -11,7 +11,7 @@
  *   :prop(value) - resolved to property value of the element;
  *   :content - resolved to text content of the element.
  */
-
+'use strict';
 const HTMLControlName = [
   'label[for~=:id]',
   ':parent(label)'

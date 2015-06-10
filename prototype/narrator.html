@@ -1,14 +1,17 @@
-<html>
-<head>
-<title>Narrator: an example of accessibility API consumer.</title>
+<!doctype html>
 <meta charset='utf-8'>
-<script type="text/javascript" src="html.js"></script>
-<script type="text/javascript" src="aria.js"></script>
-<script type="text/javascript" src="a11yapi.js"></script>
-<script type="text/javascript" src="narrator.js"></script>
-</head>
+<title>Narrator: an example of accessibility API consumer.</title>
+<script src="html.js"></script>
+<script src="aria.js"></script>
+<script src="a11yapi.js"></script>
+<script src="narrator.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function init(){
+  Narrator.start();
+});
+</script>
 
-<body onload="Narrator.start();">
+<body>
   <a href="www.mozilla.org">mozilla</a>
   <form>
     <label for="checkbox">Sign the form
@@ -20,4 +23,3 @@
   <div role="button">ARIA button</div>
   <input readonly value="this is a text">
 </body>
-</html>

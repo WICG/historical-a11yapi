@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset='utf-8'>
+<title>Narrator: an example of accessibility API consumer.</title>
+<script src="html.js"></script>
+<script src="aria.js"></script>
+<script src="a11yapi.js"></script>
+<script src="narrator.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function init(){
+  Narrator.start();
+});
+</script>
+
+<body>
+  <a href="www.mozilla.org">mozilla</a>
+  <form>
+    <label for="checkbox">Sign the form
+      <input id="checkbox" type="checkbox" checked>
+    </label>
+    <input type="button" value="Submit" disabled>
+  </form>
+  <p>This is amazing screen reader.</p>
+  <div role="button">ARIA button</div>
+  <input readonly value="this is a text">
+</body>

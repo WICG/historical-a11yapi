@@ -263,12 +263,26 @@
         </figure>
         <p>
           All <a title="accessible object">accessible objects</a> are organized
-          into <a titile="accessible tree">accessible trees</a>.
+          into <a titile="accessible tree">accessible trees</a>, in other words all accessible objects
+          are supposed to stay in parent-child relationship. The <a>assistive technology</a> can
+          traverse the document by traversing its accessible tree.
         </p>
         <figure>
           <img src="images/tree.png">
           <figcaption>
             Accessible tree.
+          </figcaption>
+        </figure>
+        <p>
+          The browser exposes semantics of the content to the <a>assistive technology</a> like
+          screen readers or screen magnifiers softwares via platform APIs like
+          ATK, IAccessible2, UIA, NSAccessibility or this one. The assistive technology communicates back
+          to the content by the browser via platform APIs.
+        </p>
+        <figure>
+          <img src="images/overview.png">
+          <figcaption>
+            Overview of the communication between the content and the <a>assistive technology</a>.
           </figcaption>
         </figure>
       </section>

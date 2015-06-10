@@ -13,14 +13,14 @@
  */
 
 const HTMLControlName = [
-  "label[for~=:id]",
-  ":parent(label)"
+  'label[for~=:id]',
+  ':parent(label)'
 ];
 
 var HTMLSemantics = {
   a: {
-    match: "a[href]",
-    role: "link",
+    match: 'a[href]',
+    role: 'link',
     states: {
       visited: function(elm) {
         // change the style sheet and get computed style.
@@ -28,69 +28,69 @@ var HTMLSemantics = {
         // problem?
       }
     },
-    text: ":content",
-    actions: [ "jump" ]
+    text: ':content',
+    actions: ['jump']
   },
 
   a_menuitem: {
-    match: ":role(menu) > a",
-    role: "menuitem"
+    match: ':role(menu) > a',
+    role: 'menuitem'
   },
 
   a_nohref: {
-    match: "a",
-    role: "text",
-    text: ":content"
+    match: 'a',
+    role: 'text',
+    text: ':content'
   },
 
   button: {
-    match: "button",
-    role: "button",
-    name: HTMLControlName.concat(":content", ":attr(title)"),
+    match: 'button',
+    role: 'button',
+    name: HTMLControlName.concat(':content', ':attr(title)'),
     states: {
-      disabled: function(elm) { return elm.hasAttribute("disabled"); }
+      disabled: function(elm) { return elm.hasAttribute('disabled'); }
     }
   },
 
   img: {
-    match: "img",
-    role: "image",
-    name: [ ":attr(alt)", ":attr(title)" ]
+    match: 'img',
+    role: 'image',
+    name: [':attr(alt)', ':attr(title)']
   },
 
   input_button: {
-    match: "input[type='button']",
-    role: "button",
-    name: HTMLControlName.concat(":attr(value)", ":attr(title)"),
+    match: 'input[type="button"]',
+    role: 'button',
+    name: HTMLControlName.concat(':attr(value)', ':attr(title)'),
     states: {
-      disabled: ":prop(disabled)"
+      disabled: ':prop(disabled)'
     }
   },
 
   input_checkbox: {
-    match: "input[type='checkbox']",
-    role: "checkbox",
-    name: HTMLControlName.concat(":attr(title)"),
+    match: 'input[type="checkbox"]',
+    role: 'checkbox',
+    name: HTMLControlName.concat(':attr(title)'),
     states: {
-      checked: ":prop(checked)",
-      disabled: ":prop(disabled)"
+      checked: ':prop(checked)',
+      disabled: ':prop(disabled)'
     }
   },
 
   input_text: {
-    match: "input",
-    role: "textbox",
+    match: 'input',
+    role: 'textbox',
     name: HTMLControlName,
     states: {
-      readonly: ":prop(readonly)",
-      disabled: ":prop(disabled)"
+      readonly: ':prop(readonly)',
+      disabled: ':prop(disabled)'
     },
-    text: ":prop(value)"
+    text: ':prop(value)'
   },
 
   p: {
-    match: "p",
-    role: "paragraph",
-    text: ":content"
+    match: 'p',
+    role: 'paragraph',
+    text: ':content'
   }
 };

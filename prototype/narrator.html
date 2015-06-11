@@ -5,13 +5,8 @@
 <script src="aria.js"></script>
 <script src="a11yapi.js"></script>
 <script src="narrator.js"></script>
-<script>
-document.addEventListener('load', function init(){
-  Narrator.start();
-});
-</script>
 
-<body>
+<body onload="Narrator.start();">
   <a href="https://www.mozilla.org">mozilla</a>
   <form>
     <label for="checkbox">Sign the form

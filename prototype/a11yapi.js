@@ -1,15 +1,15 @@
 (function(){
   'use strict';
-  Object.defineProperty(Node.prototype, 'a11eObject', {
+  Object.defineProperty(Node.prototype, 'accessibleElement', {
     get: function () {
-      return a11eObjectFor(this);
+      return A11ementFor(this);
     }
   });
 
   /**
-   * Return an accessible object for the given DOM node if any.
+   * Return an accessible element for the given DOM node if any.
    */
-  function a11eObjectFor(aNode) {
+  function A11ementFor(aNode) {
     if (!aNode) {
       return null;
     }
@@ -30,7 +30,7 @@
       })) {
       console.log('traversed: ' + aNode + ', matched: ');
       sobjs.forEach(console.log.bind(console));
-      return new A11eObj(aNode, sobjs);
+      return new A11ement(aNode, sobjs);
     }
 
     return null;
@@ -90,7 +90,7 @@
         var parent = null;
         do {
           node = node.parentNode;
-        } while ((parent = a11eObjectFor(node)));
+        } while ((parent = A11ementFor(node)));
 
         if (parent && parent.role === obj.role) {
           w++;
@@ -110,9 +110,9 @@
 
 
   /**
-   * Object implementing AccessibleObject interface.
+   * Object implementing AccessibleElement interface.
    */
-  function A11eObj(aNode, aSemanticsObjects) {
+  function A11ement(aNode, aSemanticsObjects) {
     this.node = aNode;
     this.sobjs = aSemanticsObjects;
 
@@ -126,7 +126,7 @@
     }
   }
 
-  A11eObj.prototype = {
+  A11ement.prototype = {
     get role() {
       return this.prop('role');
     },
@@ -207,7 +207,7 @@
     get parent() {
       //parentNode will eventually be 'null' as we walk up the tree
       for (var parentNode = this.DOMNode.parentNode; parentNode; parentNode = parentNode.parentNode) {
-        var obj = a11eObjectFor(parentNode);
+        var obj = A11ementFor(parentNode);
         if (obj) {
           return obj;
         }
@@ -228,7 +228,7 @@
             };
           }
 
-          var obj = a11eObjectFor(this.cur);
+          var obj = A11ementFor(this.cur);
           if (!obj) {
             if (this.cur.firstChild) {
               this.cur = this.cur.firstChild;

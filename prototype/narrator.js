@@ -9,7 +9,7 @@ window.Narrator = {
   setTo: function (aRoot) {
     this.shh();
 
-    this.root = document.a11eObject;
+    this.root = document.accessibleElement;
     this.sayObj(this.root);
     this.say('Use down arrow key to navigate.');
 

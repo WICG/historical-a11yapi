@@ -28,7 +28,9 @@
     if (sobjs.some(function (el) {
         return el.match != ":role";
       })) {
-      console.log('traversed: ' + aNode + ', matched: ');
+      console.log('traversed: ');
+      console.log(aNode);
+      console.log('matched: ');
       sobjs.forEach(console.log.bind(console));
       return new A11eObj(aNode, sobjs);
     }
@@ -54,8 +56,9 @@
       }
 
       // Find an object whichever matches the DOM node best.
+      // Expected format: ':role(name) > tag[attr="value"]'
       let re =
-        /(?:\:role\((\w+)\))?(?:\s*>\s*)?(?:\*|(\w+))?(?:\[(\w+)(?:\='(\w+)')?\])?/;
+        /(?:\:role\((\w+)\))?(?:\s*>\s*)?(?:\*|(\w+))?(?:\[(\w+)(?:\=['"](\w+)['"])?\])?/;
 
       let parsed = sobj.match.match(re);
       if (!parsed) {

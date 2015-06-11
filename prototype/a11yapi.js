@@ -55,7 +55,7 @@
 
       // Find an object whichever matches the DOM node best.
       var re =
-        /(?:\:role\((\w+)\))?(?:\s*>\s*)?(?:\*|(\w+))?(?:\[(\w+)(?:\='(\w+)')?\])?/;
+        /(?:\:role\((\w+)\))?(?:\s*>\s*)?(?:\*|(\w+))?(?:\[(\w+)(?:\=['"](\w+)['"])?\])?/;
 
       var parsed = sobj.match.match(re);
       if (!parsed) {

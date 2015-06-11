@@ -1,6 +1,6 @@
 'use strict';
 
-const Narrator = {
+window.Narrator = {
   start: function () {
     Controller.init();
     this.setTo(document);
@@ -19,13 +19,13 @@ const Narrator = {
   next: function () {
     this.shh();
 
-    let it = this.stack.length > 0 ? this.stack[this.stack.length - 1] : null;
+    var it = this.stack.length > 0 ? this.stack[this.stack.length - 1] : null;
     if (!it) {
       this.say('Reached the end.');
       return false;
     }
 
-    let next = it[Symbol.iterator]().next();
+    var next = it[Symbol.iterator]().next();
     if (next.value) {
       this.stack.push(next.value.children);
       this.sayObj(next.value);
@@ -43,25 +43,25 @@ const Narrator = {
   },
 
   sayObj: function (aObj) {
-    let name = aObj.name;
+    var name = aObj.name;
     if (name) {
       this.say(name);
     }
 
-    let description = aObj.description;
+    var description = aObj.description;
     if (description) {
       this.say(description);
     }
 
     this.say(aObj.role);
-    let text = aObj.text;
+    var text = aObj.text;
     if (text) {
       this.say(text);
     }
 
-    let states = aObj.states;
+    var states = aObj.states;
     if (states.size > 0) {
-      for (let state of states) {
+      for (var state of states) {
         this.say(state);
       }
     }
@@ -84,13 +84,13 @@ const Narrator = {
 };
 
 
-let Controller = {
+var Controller = {
   init: function () {
     document.addEventListener('keydown', this.onkey.bind(this), false);
   },
 
   onkey: function (aEvent) {
-    let key = aEvent.key;
+    var key = aEvent.key;
     if (!key) { // Chrome doesn't implement 'key' prop.
       switch (aEvent.keyCode) {
       case 38:

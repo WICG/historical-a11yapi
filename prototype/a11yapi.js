@@ -14,7 +14,7 @@
       return null;
     }
 
-    let sobjs = [];
+    var sobjs = [];
     if (aNode.nodeType === Node.DOCUMENT_NODE) {
       sobjs.push({
         match: ':document',
@@ -41,11 +41,11 @@
    * Finds match objects describing the semantics of the given DOM node.
    */
   function match(aNode, aSemanticsScope, aList) {
-    let weight = 0;
-    let matchByWeight = null;
+    var weight = 0;
+    var matchByWeight = null;
 
-    for (let key in aSemanticsScope) {
-      let sobj = aSemanticsScope[key];
+    for (var key in aSemanticsScope) {
+      var sobj = aSemanticsScope[key];
 
       // A global, applies to all DOM nodes.
       if (sobj.match === ':role') {
@@ -54,22 +54,22 @@
       }
 
       // Find an object whichever matches the DOM node best.
-      let re =
+      var re =
         /(?:\:role\((\w+)\))?(?:\s*>\s*)?(?:\*|(\w+))?(?:\[(\w+)(?:\='(\w+)')?\])?/;
 
-      let parsed = sobj.match.match(re);
+      var parsed = sobj.match.match(re);
       if (!parsed) {
         console.log(`Failed to parse the match: ${sobj.match}`);
       }
 
-      let obj = {
+      var obj = {
         role: parsed[1],
         tag: parsed[2],
         attr: parsed[3],
         attrval: parsed[4]
       };
 
-      let w = 0;
+      var w = 0;
       if (obj.tag) {
         if (obj.tag != aNode.localName) {
           continue;
@@ -86,8 +86,8 @@
       }
 
       if (obj.role) {
-        let node = aNode;
-        let parent = null;
+        var node = aNode;
+        var parent = null;
         do {
           node = node.parentNode;
         } while ((parent = a11eObjectFor(node)));
@@ -117,7 +117,7 @@
     this.sobjs = aSemanticsObjects;
 
     this.prop = function (aName) {
-      for (let obj of this.sobjs) {
+      for (var obj of this.sobjs) {
         if (aName in obj) {
           return obj[aName];
         }
@@ -132,15 +132,15 @@
     },
 
     get name() {
-      let rules = [];
-      for (let obj of this.sobjs) {
+      var rules = [];
+      for (var obj of this.sobjs) {
         if ('name' in obj) {
           rules = rules.concat(obj.name);
         }
       }
 
-      for (let rule of rules) {
-        let name = this.resolveSelector(rule);
+      for (var rule of rules) {
+        var name = this.resolveSelector(rule);
         if (name) {
           return name;
         }
@@ -149,15 +149,15 @@
     },
 
     get description() {
-      let rules = [];
-      for (let obj in this.sobj) {
+      var rules = [];
+      for (var obj in this.sobj) {
         if ('description' in obj) {
           rules = rules.concat(obj.description);
         }
       }
 
-      for (let rule of rules) {
-        let text = this.resolveSelector(rule);
+      for (var rule of rules) {
+        var text = this.resolveSelector(rule);
         if (text) {
           return text;
         }
@@ -166,20 +166,20 @@
     },
 
     get text() {
-      let text = this.prop('text');
+      var text = this.prop('text');
       if (!text) {
         return '';
       }
 
-      let value = this.resolveSelector(text);
+      var value = this.resolveSelector(text);
       return value ? value : text;
     },
 
     get states() {
-      let list = [];
-      let states = this.prop('states');
+      var list = [];
+      var states = this.prop('states');
       if (states) {
-        for (let s in states) {
+        for (var s in states) {
           switch (typeof states[s]) {
           case 'function':
             if (states[s](this.DOMNode)) {
@@ -206,8 +206,8 @@
 
     get parent() {
       //parentNode will eventually be 'null' as we walk up the tree
-      for (let parentNode = this.DOMNode.parentNode; parentNode; parentNode = parentNode.parentNode) {
-        let obj = a11eObjectFor(parentNode);
+      for (var parentNode = this.DOMNode.parentNode; parentNode; parentNode = parentNode.parentNode) {
+        var obj = a11eObjectFor(parentNode);
         if (obj) {
           return obj;
         }
@@ -216,10 +216,10 @@
     },
 
     get children() {
-      let root = this.DOMNode;
-      let cur = root.firstChild;
+      var root = this.DOMNode;
+      var cur = root.firstChild;
 
-      let iterator = {
+      var iterator = {
         next: function () {
           if (!this.cur) {
             return {
@@ -228,7 +228,7 @@
             };
           }
 
-          let obj = a11eObjectFor(this.cur);
+          var obj = a11eObjectFor(this.cur);
           if (!obj) {
             if (this.cur.firstChild) {
               this.cur = this.cur.firstChild;
@@ -270,7 +270,7 @@
         cur: cur
       };
 
-      let iterable = {};
+      var iterable = {};
       iterable[Symbol.iterator] = function () {
         return iterator;
       };
@@ -286,13 +286,13 @@
      */
     resolveSelector: function (aSelector) {
       // :idrefs
-      let match = aSelector.match(/\:idrefs\((.+)\)/);
+      var match = aSelector.match(/\:idrefs\((.+)\)/);
       if (match) {
-        let text = '';
+        var text = '';
         if (this.DOMNode.hasAttribute(match[1])) {
-          let ids = this.DOMNode.getAttribute(match[1]).split();
-          for (let id of ids) {
-            let el = document.getElementById('id');
+          var ids = this.DOMNode.getAttribute(match[1]).split();
+          for (var id of ids) {
+            var el = document.getElementById('id');
             if (el) {
               text += el.textContent;
             }
@@ -303,10 +303,10 @@
 
       // :id
       if (aSelector.indexOf(':id') != -1 && this.DOMNode.hasAttribute('id')) {
-        let text = '';
-        let selector = aSelector.replace(':id', `'${this.DOMNode.getAttribute('id')}'`);
-        let nodes = document.querySelectorAll(selector);
-        for (let i = 0; i < nodes.length; ++i) { // Chrome doesn't like 'for of' on NodeList
+        var text = '';
+        var selector = aSelector.replace(':id', `'${this.DOMNode.getAttribute('id')}'`);
+        var nodes = document.querySelectorAll(selector);
+        for (var i = 0; i < nodes.length; ++i) { // Chrome doesn't like 'for of' on NodeList
           text += nodes[i].textContent;
         }
         return text;

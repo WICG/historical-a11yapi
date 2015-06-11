@@ -3,7 +3,7 @@
  *
  * Text selector syntax:
  *   :role a pseudo class pointing this element has to be accessible;
- *   :role(name) a pseudo class matching an element having an accessible object
+ *   :role(name) a pseudo class matching an element having an accessible element
  *     of 'name' role;
  *   > points this element has to have parent complying preceding selector;
  *   :id - resolved to id attribute of the element;

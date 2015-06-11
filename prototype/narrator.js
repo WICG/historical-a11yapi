@@ -13,33 +13,32 @@ window.Narrator = {
     this.sayObj(this.root);
     this.say('Use down arrow key to navigate.');
 
-    this.stack = [this.root.children];
+    this.pin = new AccessiblePin(this.root, this.root);
   },
 
   next: function () {
     this.shh();
 
-    var it = this.stack.length > 0 ? this.stack[this.stack.length - 1] : null;
-    if (!it) {
+    if (this.pin.move("forward")) {
+      this.sayObj(this.pin.anchor);
+    } else {
       this.say('Reached the end.');
-      return false;
+      this.pin.anchor = this.root;
     }
-
-    var next = it[Symbol.iterator]().next();
-    if (next.value) {
-      this.stack.push(next.value.children);
-      this.sayObj(next.value);
-      return next.done;
-    }
-
-    this.stack.pop();
-    return this.next();
   },
 
   prev: function () {
     // Not implemented, we have to have something better than iterable for
     // children, that can be either prevSibling, nextSibling, firstChild,
     // lastChild or some tree traversal API.
+    this.shh();
+
+    if (this.pin.move("backward")) {
+      this.sayObj(this.pin.anchor);
+    } else {
+      this.say('Reached the beginning.');
+      this.pin.anchor = this.root;
+    }
   },
 
   sayObj: function (aObj) {
@@ -78,9 +77,7 @@ window.Narrator = {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
-  },
-
-  stack: []
+  }
 };
 
 

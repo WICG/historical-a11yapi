@@ -1,10 +1,71 @@
 (function(){
   'use strict';
+
   Object.defineProperty(Node.prototype, 'accessibleElement', {
     get: function () {
       return A11ementFor(this);
     }
   });
+
+  window.AccessiblePin = function(aAnchor, aRoot)
+  {
+    this.anchor = aAnchor;
+    this.rootNode = aRoot.DOMNode;
+
+    this.move = function(aWhere, aCriteria)
+    {
+      if (!this.anchor)
+        return false;
+
+      switch (aWhere) {
+        case "forward":
+          var root = this.rootNode;
+          function toNext(aNode) {
+            if (aNode.firstChild) {
+              return A11ementFor(aNode.firstChild) || toNext(aNode.firstChild);
+            }
+
+            if (aNode.nextSibling) {
+              return A11ementFor(aNode.nextSibling) || toNext(aNode.nextSibling);
+            }
+
+            var node = aNode;
+            while ((node = node.parentNode) && node != root) {
+              if (node.nextSibling) {
+                return A11ementFor(node.nextSibling) || toNext(node.nextSibling);
+              }
+            }
+
+            return null;
+          }
+          this.anchor = toNext(this.anchor.DOMNode);
+          return !!this.anchor;
+
+        case "backward":
+          var root = this.rootNode;
+          function toPrev(aNode) {
+            if (aNode.lastChild) {
+              return A11ementFor(aNode.lastChild) || toPrev(aNode.lastChild);
+            }
+
+            if (aNode.previousSibling) {
+              return A11ementFor(aNode.previousSibling) || toPrev(aNode.previousSibling);
+            }
+
+            var node = aNode;
+            while ((node = node.parentNode) && node != root) {
+              if (node.previousSibling) {
+                return A11ementFor(node.previousSibling) || toPrev(node.previousSibling);
+              }
+            }
+
+            return null;
+          }
+          this.anchor = toPrev(this.anchor.DOMNode);
+          return !!this.anchor;
+      }
+    }
+  }
 
   /**
    * Return an accessible element for the given DOM node if any.
@@ -213,6 +274,35 @@
         }
       }
       return null;
+    },
+
+    get nextSibling() {
+      var cur = this.DOMNode;
+
+      function toNext(aNode) {
+        if (!aNode.nextSibling) {
+          var node = aNode.parentNode;
+          if (node.nextSibling) {
+            return toNext(node);
+          }
+        }
+
+        var obj = A11ementFor(aNode.nextSibling);
+        if (obj) {
+          return obj;
+        }
+
+        obj = A11ementFor(aNode.firstChild);
+        if (obj) {
+          return obj;
+        }
+
+        return toNext(aNode.firstChild);
+      }
+    },
+
+    get previousSibling() {
+
     },
 
     get children() {

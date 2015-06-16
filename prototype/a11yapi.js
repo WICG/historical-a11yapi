@@ -18,52 +18,49 @@
         return false;
 
       switch (aWhere) {
-        case "forward":
-          var root = this.rootNode;
-          function toNext(aNode) {
-            if (aNode.firstChild) {
-              return A11ementFor(aNode.firstChild) || toNext(aNode.firstChild);
-            }
-
-            if (aNode.nextSibling) {
-              return A11ementFor(aNode.nextSibling) || toNext(aNode.nextSibling);
-            }
-
-            var node = aNode;
-            while ((node = node.parentNode) && node != root) {
-              if (node.nextSibling) {
-                return A11ementFor(node.nextSibling) || toNext(node.nextSibling);
-              }
-            }
-
-            return null;
-          }
-          this.anchor = toNext(this.anchor.DOMNode);
+        case 'forward':
+          this.anchor = toNext(this.rootNode, this.anchor.DOMNode);
           return !!this.anchor;
 
-        case "backward":
-          var root = this.rootNode;
-          function toPrev(aNode) {
-            if (aNode.lastChild) {
-              return A11ementFor(aNode.lastChild) || toPrev(aNode.lastChild);
-            }
-
-            if (aNode.previousSibling) {
-              return A11ementFor(aNode.previousSibling) || toPrev(aNode.previousSibling);
-            }
-
-            var node = aNode;
-            while ((node = node.parentNode) && node != root) {
-              if (node.previousSibling) {
-                return A11ementFor(node.previousSibling) || toPrev(node.previousSibling);
-              }
-            }
-
-            return null;
-          }
-          this.anchor = toPrev(this.anchor.DOMNode);
+        case 'backward':
+          this.anchor = toPrev(this.rootNode, this.anchor.DOMNode);
           return !!this.anchor;
       }
+    }
+
+    function toNext(aRoot, aNode) {
+      if (aNode.firstChild) {
+        return A11ementFor(aNode.firstChild) || toNext(aRoot, aNode.firstChild);
+      }
+      if (aNode.nextSibling) {
+        return A11ementFor(aNode.nextSibling) || toNext(aRoot, aNode.nextSibling);
+      }
+
+      var node = aNode;
+      while ((node = node.parentNode) && node != aRoot) {
+        if (node.nextSibling) {
+          return A11ementFor(node.nextSibling) || toNext(aRoot, node.nextSibling);
+        }
+      }
+      return null;
+    }
+
+    function toPrev(aRoot, aNode) {
+      if (aNode.lastChild) {
+        return A11ementFor(aNode.lastChild) || toPrev(aRoot, aNode.lastChild);
+      }
+      if (aNode.previousSibling) {
+        return A11ementFor(aNode.previousSibling) || toPrev(aRoot, aNode.previousSibling);
+      }
+
+      var node = aNode;
+      while ((node = node.parentNode) && node != aRoot) {
+        if (node.previousSibling) {
+          return A11ementFor(node.previousSibling) ||
+            toPrev(aRoot, node.previousSibling);
+        }
+      }
+      return null;
     }
   }
 

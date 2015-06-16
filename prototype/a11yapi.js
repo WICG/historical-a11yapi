@@ -276,35 +276,6 @@
       return null;
     },
 
-    get nextSibling() {
-      var cur = this.DOMNode;
-
-      function toNext(aNode) {
-        if (!aNode.nextSibling) {
-          var node = aNode.parentNode;
-          if (node.nextSibling) {
-            return toNext(node);
-          }
-        }
-
-        var obj = A11ementFor(aNode.nextSibling);
-        if (obj) {
-          return obj;
-        }
-
-        obj = A11ementFor(aNode.firstChild);
-        if (obj) {
-          return obj;
-        }
-
-        return toNext(aNode.firstChild);
-      }
-    },
-
-    get previousSibling() {
-
-    },
-
     get children() {
       var root = this.DOMNode;
       var cur = root.firstChild;

@@ -1,0 +1,22 @@
+<!doctype html>
+<meta charset='utf-8'>
+<title>Inspector: an example of accessibility inspection tool.</title>
+<script src="html.js"></script>
+<script src="aria.js"></script>
+<script src="a11yapi.js"></script>
+<script src="inspector.js"></script>
+
+<style>
+#inspector {
+  float: right;
+  border: 1px solid black;
+  height: 100%;
+}
+</style>
+
+<body onload="Inspector.attach('inspector');">
+<h1>A mighty mouse</h1>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<button disabled>a personal button of mighty mouse</button>
+<div id="inspector"></div>
+</body>

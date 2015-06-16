@@ -43,6 +43,47 @@ var HTMLSemantics = {
     text: ':content'
   },
 
+  h1: {
+    match: 'h1',
+    role: 'heading',
+    text: ':content',
+    attrs: {
+      level: 1
+    }
+  },
+  h2: {
+    match: 'h2',
+    role: 'heading',
+    text: ':content',
+    attrs: {
+      level: 2
+    }
+  },
+  h3: {
+    match: 'h3',
+    role: 'heading',
+    text: ':content',
+    attrs: {
+      level: 3
+    }
+  },
+  h4: {
+    match: 'h4',
+    role: 'heading',
+    text: ':content',
+    attrs: {
+      level: 4
+    }
+  },
+  h5: {
+    match: 'h5',
+    role: 'heading',
+    text: ':content',
+    attrs: {
+      level: 5
+    }
+  },
+
   button: {
     match: 'button',
     role: 'button',

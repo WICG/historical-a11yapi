@@ -346,6 +346,7 @@ interface AccessibleElement {
   readonly attribute StateSet states;
 
   readonly attribute AttributeMap attributes;
+  any get();
 
   sequence&lt;DOMString&gt; getPatterns();
   object toPattern(DOMString type);
@@ -464,6 +465,15 @@ interface AccessibleElement {
       </section>
       <section>
         <h3>
+          <code>get</code> method
+        </h3>
+        <p>
+          Return a value of the request <a>attribute</a> of this <a>accessible
+          element</a>.
+        </p>
+      </section>
+      <section>
+        <h3>
           <code>parent</code> attribute
         </h3>
         <p>
@@ -503,15 +513,15 @@ interface AccessibleElement {
         <code>AccessiblePin</code> serves to traverse the content, for example,
         if you need to navigate a document by headings or navigate a paragraph
         by words. It describes an <a>accessible position</a> in the content.
-        The <a>accessible pin</a> can be moved into the given direction within the
-        document to the content complying with the given criteria. A movement
-        can be illustrated by verbal descriptions like "move the pin forward to
-        a next heading" or "move the pin one word back".
+        The <a>accessible pin</a> can be moved into the given direction within
+        the document to the content complying with the given criteria. A
+        movement can be illustrated by verbal descriptions like "move the pin
+        forward to a next heading" or "move the pin one word back".
       </p>
       <pre class="idl">
 [Constructor(AccessibleElement anchor, optional AccessibleElement root)]
 interface AccessiblePin {
-  AccessiblePin? move(Where where, Criteria criteria);
+  AccessiblePin? move(Where where, optional Criteria criteria);
 };
 
 enum Where {
@@ -526,8 +536,10 @@ callback Criteria = "at "or "next" (AccessibleElement);
           <code>move</code> method
         </h3>
         <p>
-          Moves the <a>accessible pin</a> to a next position in the
-          <a>accessible tree</a>.
+          Moves the <a>accessible pin</a> to a next/previous position in the
+          <a>accessible tree</a> according to the criteria. If the criteria is
+          omitted then it moves the pin to a next/previous accessible element
+          in the <a>accessible tree</a>.
         </p>
       </section>
     </section>

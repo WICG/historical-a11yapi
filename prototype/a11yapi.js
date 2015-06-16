@@ -17,47 +17,58 @@
       if (!this.anchor)
         return false;
 
+      var critera = function(aNode) {
+        var obj = A11ementFor(aNode);
+        return obj && (!aCriteria || aCriteria.call(null, obj) == 'at') && obj;
+      }
+
+      var root = this.rootNode;
       switch (aWhere) {
         case 'forward':
-          this.anchor = toNext(this.rootNode, this.anchor.DOMNode);
+          this.anchor = toNext(this.rootNode, critera, this.anchor.DOMNode);
           return !!this.anchor;
 
         case 'backward':
-          this.anchor = toPrev(this.rootNode, this.anchor.DOMNode);
+          this.anchor = toPrev(this.rootNode, critera, this.anchor.DOMNode);
           return !!this.anchor;
       }
     }
 
-    function toNext(aRoot, aNode) {
+    function toNext(aRoot, aCriteria, aNode) {
       if (aNode.firstChild) {
-        return A11ementFor(aNode.firstChild) || toNext(aRoot, aNode.firstChild);
+        return aCriteria(aNode.firstChild) ||
+          toNext(aRoot, aCriteria, aNode.firstChild);
       }
       if (aNode.nextSibling) {
-        return A11ementFor(aNode.nextSibling) || toNext(aRoot, aNode.nextSibling);
+        return aCriteria(aNode.nextSibling) ||
+          toNext(aRoot, aCriteria, aNode.nextSibling);
       }
 
       var node = aNode;
       while ((node = node.parentNode) && node != aRoot) {
         if (node.nextSibling) {
-          return A11ementFor(node.nextSibling) || toNext(aRoot, node.nextSibling);
+          return aCriteria(node.nextSibling) ||
+            toNext(aRoot, aCriteria, node.nextSibling);
         }
       }
       return null;
     }
 
-    function toPrev(aRoot, aNode) {
+    function toPrev(aRoot, aCriteria, aNode) {
       if (aNode.lastChild) {
-        return A11ementFor(aNode.lastChild) || toPrev(aRoot, aNode.lastChild);
+        return aCriteria(aNode.lastChild) ||
+          toPrev(aRoot, aCriteria, aNode.lastChild);
       }
       if (aNode.previousSibling) {
-        return A11ementFor(aNode.previousSibling) || toPrev(aRoot, aNode.previousSibling);
+        return aCriteria(aNode.previousSibling) ||
+          toPrev(aRoot, aCriteria, aNode.previousSibling);
       }
 
       var node = aNode;
       while ((node = node.parentNode) && node != aRoot) {
         if (node.previousSibling) {
-          return A11ementFor(node.previousSibling) ||
-            toPrev(aRoot, node.previousSibling);
+          return aCriteria(node.previousSibling) ||
+            toPrev(aRoot, aCriteria, node.previousSibling);
         }
       }
       return null;
@@ -255,6 +266,11 @@
     },
 
     get attributes() {},
+
+    get: function(aName) {
+      var attrs = this.prop('attrs');
+      return attrs && attrs[aName];
+    },
 
     get patterns() {},
     toPattern: function () {},

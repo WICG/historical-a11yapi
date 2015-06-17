@@ -10,6 +10,7 @@
   window.AccessiblePin = function(aAnchor, aRoot)
   {
     this.anchor = aAnchor;
+    this.offset = 'at';
     this.rootNode = aRoot.DOMNode;
 
     this.move = function(aWhere, aCriteria)
@@ -19,23 +20,39 @@
 
       var critera = function(aNode) {
         var obj = A11ementFor(aNode);
-        return obj && (!aCriteria || aCriteria.call(null, obj) == 'at') && obj;
+        if (obj) {
+          var offset = (aCriteria && aCriteria.call(null, obj)) || 'at';
+          if (offset != 'next') {
+            return { anchor: obj, offset: offset };
+          }
+          return null;
+        }
       }
 
+      var res = null;
       var root = this.rootNode;
       switch (aWhere) {
         case 'forward':
-          this.anchor = toNext(this.rootNode, critera, this.anchor.DOMNode);
-          return !!this.anchor;
+          res = toNext(this.rootNode, critera, this.anchor.DOMNode,
+                       (this.offset == 'after'));
+          break;
 
         case 'backward':
-          this.anchor = toPrev(this.rootNode, critera, this.anchor.DOMNode);
-          return !!this.anchor;
+          res = toPrev(this.rootNode, critera, this.anchor.DOMNode,
+                       (this.offset == 'before'));
+          break;
+
+        default:
+          return false;
       }
+
+      this.anchor = res && res.anchor;
+      this.offset = res && res.offset;
+      return !!this.anchor;
     }
 
-    function toNext(aRoot, aCriteria, aNode) {
-      if (aNode.firstChild) {
+    function toNext(aRoot, aCriteria, aNode, aSkipKids) {
+      if (aNode.firstChild && !aSkipKids) {
         return aCriteria(aNode.firstChild) ||
           toNext(aRoot, aCriteria, aNode.firstChild);
       }
@@ -54,8 +71,8 @@
       return null;
     }
 
-    function toPrev(aRoot, aCriteria, aNode) {
-      if (aNode.lastChild) {
+    function toPrev(aRoot, aCriteria, aNode, aSkipKids) {
+      if (aNode.lastChild && !aSkipKids) {
         return aCriteria(aNode.lastChild) ||
           toPrev(aRoot, aCriteria, aNode.lastChild);
       }

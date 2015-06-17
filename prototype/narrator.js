@@ -82,7 +82,9 @@ window.Narrator = {
   },
 
   criterias: {
-    default: null,
+    default: function(aEl) {
+      return aEl.text != '' ? 'after' : 'at';
+    },
     heading: function(aEl) {
       return aEl.role == 'heading' ? 'at' : 'next';
     }
@@ -96,7 +98,6 @@ var Controller = {
   },
 
   onkey: function (aEvent) {
-    console.log(aEvent.keyCode);
     var key = aEvent.key;
     if (!key) { // Chrome doesn't implement 'key' prop.
       switch (aEvent.keyCode) {

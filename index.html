@@ -529,7 +529,13 @@ enum Where {
   "backward"
 };
 
-callback Criteria = "at "or "next" (AccessibleElement);
+enum Offset {
+  "before",
+  "at",
+  "after"
+};
+
+callback Criteria = Offset or "next" (AccessibleElement);
 </pre>
       <section>
         <h3>
@@ -540,6 +546,47 @@ callback Criteria = "at "or "next" (AccessibleElement);
           <a>accessible tree</a> according to the criteria. If the criteria is
           omitted then it moves the pin to a next/previous accessible element
           in the <a>accessible tree</a>.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>Where</code> constants
+        </h3>
+        <p>
+          <code><dfn>forward</dfn></code> is used to move an <a>accessible
+          pin</a> forward in an <a>accessible tree</a> it resides in.
+        </p>
+        <p>
+          <code><dfn>backward</dfn></code> is used to move an <a>accessible
+          pin</a> backward in an <a>accessible tree</a> it resides in.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>Offset</code> constants
+        </h3>
+        <p>
+          <code><dfn>before</dfn></code> is used to set an <a>accessible
+          pin</a> right before its anchor.
+        </p>
+        <p>
+          <code><dfn>at</dfn></code> is used to set an <a>accessible
+          pin</a> at the anchor. For example, if the pin follows the focus, and
+          a button is focused then the pin is <code>at</code> the button.
+        </p>
+        <p>
+          <code><dfn>after</dfn></code> is used to set an <a>accessible
+          pin</a> right after its anchor.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>Criteria</code> function
+        </h3>
+        <p>
+          <code><dfn>criteria</dfn></code> is a function defines rules that
+          describe how <a>accessible pin</a> should be moved within an
+          <a>accessible tree</a>.
         </p>
       </section>
     </section>

@@ -349,6 +349,15 @@
       return items[0] && items[0].accessibleElement;
     },
 
+    relativeOf: function(aType) {
+      var rels = this.prop('rels');
+      if (!rels || !rels[aType])
+        return null;
+
+      var items = this.resolveNodeSelector(rels[aType]);
+      return items[0] && items[0].accessibleElement;
+    },
+
     get patterns() {},
     to: function () {},
 

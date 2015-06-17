@@ -133,6 +133,7 @@
     default:
       match(aNode, ARIASemantics, sobjs);
       match(aNode, HTMLSemantics, sobjs);
+      match(aNode, MathMLSemantics, sobjs);
     }
 
     if (sobjs.some(function (el) {
@@ -311,6 +312,17 @@
       return new Set(list);
     },
 
+    is: function(aState) {
+      var states = this.prop('states');
+      if (states) {
+        if (typeof states[aState] == 'function') {
+          return states[aState](this.DOMNode);
+        }
+        return this.resolveSelector(states[aState]);
+      }
+      return false;
+    },
+
     get attributes() {},
 
     get: function(aName) {
@@ -325,6 +337,15 @@
           return !!this.get(aName);
       }
       return false;
+    },
+
+    relativeOf: function(aType) {
+      var rels = this.prop('rels');
+      if (!rels || !rels[aType])
+        return null;
+
+      var items = this.resolveNodeSelector(rels[aType]);
+      return items[0] && items[0].accessibleElement;
     },
 
     get patterns() {},
@@ -468,6 +489,10 @@
       }
 
       return '';
+    },
+
+    resolveNodeSelector: function(aSelector) {
+      return this.DOMNode.querySelectorAll(aSelector);
     }
   };
 }());

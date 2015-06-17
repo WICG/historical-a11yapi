@@ -61,6 +61,10 @@ window.Narrator = {
   },
 
   sayObj: function (aObj) {
+    if (!aObj) {
+      return;
+    }
+
     var name = aObj.name;
     if (name) {
       this.say(name);
@@ -75,6 +79,12 @@ window.Narrator = {
       case 'heading':
         this.say(aObj.role);
         this.say(`level ${aObj.get('level')}`);
+        break;
+
+      case 'fraction':
+        this.sayObj(aObj.relativeOf('numerator'));
+        this.say("over");
+        this.sayObj(aObj.relativeOf('denominator'));
         break;
 
       case 'paragraph':

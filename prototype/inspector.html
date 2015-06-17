@@ -8,15 +8,84 @@
 
 <style>
 #inspector {
-  float: right;
-  border: 1px solid black;
-  height: 100%;
+  margin: 20px;
+  padding-left: 15px;
+  padding-right: 50px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  overflow: auto;
+  height: 90vh;
+  border-left: 1px solid gray;
+}
+#content {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 85%;
+}
+
+li {
+  list-style-type: none;
+}
+
+li.container {
+  list-style-type: disclosure-open;
+}
+li.container:before {
+  content: '\23F7';
+  padding-right: 5px;
+}
+li.container[closed] {
+  list-style-type: disclosure-close;
 }
 </style>
 
-<body onload="Inspector.attach('inspector');">
+<body onload="Inspector.attach('inspector_tree', 'inspector_props');">
+<div id="content">
 <h1>A mighty mouse</h1>
 <p>This tale is about mighty mouse who may everything it may.</p>
 <button disabled>a personal button of mighty mouse</button>
-<div id="inspector"></div>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+<p>This tale is about mighty mouse who may everything it may.</p>
+</div>
+
+<div id="inspector">
+  <div>Inspector tool<hr></div>
+  <div id="inspector_tree"></div>
+  <div id="inspector_props"></div>
+</div>
 </body>

@@ -238,6 +238,18 @@
           element</dfn> is a [[!DOM]] <code>Node</code> or <code>Element</code>
           that has an associated <a>accessible element</a>.
         </p>
+        <p>
+          An <dfn>accessible position</dfn> is a point in the content if it's
+          presented in one-dimensional way, that can be entirely and
+          sequentially traversed with a minimal step of a semantic change. For
+          example, a position can be placed at a control element or in text of
+          a paragraph. User focus can be described by <a>accessible
+          position</a>.
+        </p>
+        <p>
+          An <dfn>accessible pin</dfn> is an object representing <a>accessible
+          position</a> and implementing <code>AccessiblePin</code> interface.
+        </p>
       </section>
       <section class="informative">
         <h3>
@@ -250,7 +262,7 @@
           "relation">relations</a> etc.
         </p>
         <figure>
-          <img src="images/props.png">
+          <img src="images/props.png" alt="accessible properties diagram">
           <figcaption>
             Accessible properties.
           </figcaption>
@@ -260,7 +272,7 @@
           to each other by number of different types.
         </p>
         <figure>
-          <img src="images/rels.png">
+          <img src="images/rels.png" alt="accessible relations diagram">
           <figcaption>
             Relations. A color of arrows connecting accessible element
             represent own relation type.
@@ -268,13 +280,13 @@
         </figure>
         <p>
           All <a title="accessible element">accessible elements</a> are
-          organized into <a titile="accessible tree">accessible trees</a>, in
+          organized into <a title="accessible tree">accessible trees</a>, in
           other words all accessible elements are supposed to stay in
           parent-child relationship. The <a>assistive technology</a> can
           traverse the document by traversing its accessible tree.
         </p>
         <figure>
-          <img src="images/tree.png">
+          <img src="images/tree.png" alt="accessible tree">
           <figcaption>
             Accessible tree.
           </figcaption>
@@ -287,7 +299,7 @@
           browser via platform APIs.
         </p>
         <figure>
-          <img src="images/overview.png">
+          <img src="images/overview.png" alt="overview diagram">
           <figcaption>
             Overview of the communication between the content and the
             <a>assistive technology</a>.
@@ -455,8 +467,8 @@ interface AccessibleElement {
           <code>parent</code> attribute
         </h3>
         <p>
-          The <dfn><code>parent</code></dfn> attribute represents the parent
-          accessible element of this <a>accessible element</a>.
+          The <dfn><code>parent</code></dfn> attribute represents <a>accessible
+          parent</a> of this <a>accessible element</a>.
         </p>
       </section>
       <section>
@@ -481,6 +493,42 @@ interface AccessibleElement {
         <h3>
           attribute
         </h3>
+      </section>
+    </section>
+    <section>
+      <h2>
+        AccessiblePin interface
+      </h2>
+      <p>
+        <code>AccessiblePin</code> serves to traverse the content, for example,
+        if you need to navigate a document by headings or navigate a paragraph
+        by words. It describes an <a>accessible position</a> in the content.
+        The <a>accessible pin</a> can be moved into the given direction within the
+        document to the content complying with the given criteria. A movement
+        can be illustrated by verbal descriptions like "move the pin forward to
+        a next heading" or "move the pin one word back".
+      </p>
+      <pre class="idl">
+[Constructor(AccessibleElement anchor, optional AccessibleElement root)]
+interface AccessiblePin {
+  AccessiblePin? move(Where where, Criteria criteria);
+};
+
+enum Where {
+  "forward",
+  "backward"
+};
+
+callback Criteria = "at "or "next" (AccessibleElement);
+</pre>
+      <section>
+        <h3>
+          <code>move</code> method
+        </h3>
+        <p>
+          Moves the <a>accessible pin</a> to a next position in the
+          <a>accessible tree</a>.
+        </p>
       </section>
     </section>
     <section>

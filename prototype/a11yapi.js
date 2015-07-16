@@ -1,10 +1,68 @@
 (function(){
   'use strict';
+
   Object.defineProperty(Node.prototype, 'accessibleElement', {
     get: function () {
       return A11ementFor(this);
     }
   });
+
+  window.AccessiblePin = function(aAnchor, aRoot)
+  {
+    this.anchor = aAnchor;
+    this.rootNode = aRoot.DOMNode;
+
+    this.move = function(aWhere, aCriteria)
+    {
+      if (!this.anchor)
+        return false;
+
+      switch (aWhere) {
+        case 'forward':
+          this.anchor = toNext(this.rootNode, this.anchor.DOMNode);
+          return !!this.anchor;
+
+        case 'backward':
+          this.anchor = toPrev(this.rootNode, this.anchor.DOMNode);
+          return !!this.anchor;
+      }
+    }
+
+    function toNext(aRoot, aNode) {
+      if (aNode.firstChild) {
+        return A11ementFor(aNode.firstChild) || toNext(aRoot, aNode.firstChild);
+      }
+      if (aNode.nextSibling) {
+        return A11ementFor(aNode.nextSibling) || toNext(aRoot, aNode.nextSibling);
+      }
+
+      var node = aNode;
+      while ((node = node.parentNode) && node != aRoot) {
+        if (node.nextSibling) {
+          return A11ementFor(node.nextSibling) || toNext(aRoot, node.nextSibling);
+        }
+      }
+      return null;
+    }
+
+    function toPrev(aRoot, aNode) {
+      if (aNode.lastChild) {
+        return A11ementFor(aNode.lastChild) || toPrev(aRoot, aNode.lastChild);
+      }
+      if (aNode.previousSibling) {
+        return A11ementFor(aNode.previousSibling) || toPrev(aRoot, aNode.previousSibling);
+      }
+
+      var node = aNode;
+      while ((node = node.parentNode) && node != aRoot) {
+        if (node.previousSibling) {
+          return A11ementFor(node.previousSibling) ||
+            toPrev(aRoot, node.previousSibling);
+        }
+      }
+      return null;
+    }
+  }
 
   /**
    * Return an accessible element for the given DOM node if any.

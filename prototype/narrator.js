@@ -16,24 +16,20 @@ window.Narrator = {
     this.pin = new AccessiblePin(this.root, this.root);
   },
 
-  next: function () {
+  next: function (aCriteria) {
     this.shh();
 
-    if (this.pin.move("forward")) {
+    if (this.pin.move('forward', this.criterias[aCriteria])) {
       this.sayObj(this.pin.anchor);
     } else {
       this.say('Reached the end.');
       this.pin.anchor = this.root;
     }
   },
-
-  prev: function () {
-    // Not implemented, we have to have something better than iterable for
-    // children, that can be either prevSibling, nextSibling, firstChild,
-    // lastChild or some tree traversal API.
+  prev: function (aCriteria) {
     this.shh();
 
-    if (this.pin.move("backward")) {
+    if (this.pin.move('backward', this.criterias[aCriteria])) {
       this.sayObj(this.pin.anchor);
     } else {
       this.say('Reached the beginning.');
@@ -53,6 +49,12 @@ window.Narrator = {
     }
 
     this.say(aObj.role);
+    switch (aObj.role) {
+      case 'heading':
+        this.say(`level ${aObj.get('level')}`);
+        break;
+    };
+
     var text = aObj.text;
     if (text) {
       this.say(text);
@@ -77,6 +79,13 @@ window.Narrator = {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
+  },
+
+  criterias: {
+    default: null,
+    heading: function(aEl) {
+      return aEl.role == 'heading' ? 'at' : 'next';
+    }
   }
 };
 
@@ -87,6 +96,7 @@ var Controller = {
   },
 
   onkey: function (aEvent) {
+    console.log(aEvent.keyCode);
     var key = aEvent.key;
     if (!key) { // Chrome doesn't implement 'key' prop.
       switch (aEvent.keyCode) {
@@ -96,16 +106,27 @@ var Controller = {
       case 40:
         key = 'ArrowDown';
         break;
+      case 72:
+        key = 'h';
+        break;
       }
     }
 
     switch (key) {
     case 'ArrowDown':
-      Narrator.next();
+      Narrator.next('default');
       break;
     case 'ArrowUp':
-      Narrator.prev();
+      Narrator.prev('default');
       break;
+
+    case 'h':
+      if (aEvent.shiftKey) {
+        Narrator.prev('heading');
+      }
+      else {
+        Narrator.next('heading');
+      }
     }
   }
 };

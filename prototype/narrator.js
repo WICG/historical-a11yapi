@@ -11,7 +11,7 @@ window.Narrator = {
 
     this.root = document.accessibleElement;
     this.sayObj(this.root);
-    this.say('Use down arrow key to navigate.');
+    this.say('Use up/down arrow key to navigate, h for headings');
 
     this.pin = new AccessiblePin(this.root, this.root);
   },

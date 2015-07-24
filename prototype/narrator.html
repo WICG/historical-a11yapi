@@ -1,8 +1,9 @@
 <!doctype html>
 <meta charset='utf-8'>
 <title>Narrator: an example of accessibility API consumer.</title>
-<script src="html.js"></script>
 <script src="aria.js"></script>
+<script src="html.js"></script>
+<script src="mathml.js"></script>
 <script src="a11yapi.js"></script>
 <script src="narrator.js"></script>
 
@@ -24,5 +25,14 @@
   <h2>Sub header</h2>
   <p>
     Here's a subheader info.
+  </p>
+  <p>
+    Here's math expression 'x divided by 2':
+    <math>
+      <mfrac bevelled="true" linethickness="thick">
+        <mi>x</mi>
+        <mn>2</mn>
+      </mfrac>
+    </math>
   </p>
 </body>

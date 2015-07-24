@@ -46,10 +46,10 @@
       }
 
       if (res) {
-        this.anchor = res;
-        if (res.text && !(typeof aCriteria == 'function')) {
+        console.log('traversed: ');
+        console.log(res.DOMNode);
 
-        }
+        this.anchor = res;
         this.offset = 'at';
       }
       return !!res;
@@ -133,13 +133,12 @@
     default:
       match(aNode, ARIASemantics, sobjs);
       match(aNode, HTMLSemantics, sobjs);
+      match(aNode, MathMLSemantics, sobjs);
     }
 
     if (sobjs.some(function (el) {
         return el.match != ":role";
       })) {
-      console.log('traversed: ' + aNode + ', matched: ');
-      sobjs.forEach(console.log.bind(console));
       return new A11ement(aNode, sobjs);
     }
 
@@ -311,6 +310,20 @@
       return new Set(list);
     },
 
+    is: function(aProp) {
+      if (aProp == this.role) {
+        return true;
+      }
+      var states = this.prop('states');
+      if (states) {
+        if (typeof states[aProp] == 'function') {
+          return states[aProp](this.DOMNode);
+        }
+        return this.resolveSelector(states[aProp]);
+      }
+      return false;
+    },
+
     get attributes() {},
 
     get: function(aName) {
@@ -325,6 +338,15 @@
           return !!this.get(aName);
       }
       return false;
+    },
+
+    relativeOf: function(aType) {
+      var rels = this.prop('rels');
+      if (!rels || !rels[aType])
+        return null;
+
+      var items = this.resolveNodeSelector(rels[aType]);
+      return items[0] && items[0].accessibleElement;
     },
 
     get patterns() {},
@@ -468,6 +490,10 @@
       }
 
       return '';
+    },
+
+    resolveNodeSelector: function(aSelector) {
+      return this.DOMNode.querySelectorAll(aSelector);
     }
   };
 }());

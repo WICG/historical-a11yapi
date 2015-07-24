@@ -10,6 +10,8 @@
   window.AccessiblePin = function(aAnchor, aRoot)
   {
     this.anchor = aAnchor;
+    this.offset = 'at';
+    this.root = aRoot;
     this.rootNode = aRoot.DOMNode;
 
     this.move = function(aWhere, aCriteria)
@@ -19,23 +21,48 @@
 
       var critera = function(aNode) {
         var obj = A11ementFor(aNode);
-        return obj && (!aCriteria || aCriteria.call(null, obj) == 'at') && obj;
+        if (obj) {
+          if (!(typeof aCriteria == 'function') || aCriteria.call(null, obj))
+            return obj;
+        }
+        return null;
       }
 
+      var res = null;
       var root = this.rootNode;
       switch (aWhere) {
         case 'forward':
-          this.anchor = toNext(this.rootNode, critera, this.anchor.DOMNode);
-          return !!this.anchor;
+          res = toNext(this.rootNode, critera, this.anchor.DOMNode,
+                       (this.offset == 'after'));
+          break;
 
         case 'backward':
-          this.anchor = toPrev(this.rootNode, critera, this.anchor.DOMNode);
-          return !!this.anchor;
+          res = toPrev(this.rootNode, critera, this.anchor.DOMNode,
+                       (this.offset == 'before'));
+          break;
+
+        default:
+          return false;
       }
+
+      if (res) {
+        this.anchor = res;
+        if (res.text && !(typeof aCriteria == 'function')) {
+
+        }
+        this.offset = 'at';
+      }
+      return !!res;
     }
 
-    function toNext(aRoot, aCriteria, aNode) {
-      if (aNode.firstChild) {
+    this.set = function(aAnchor, aOffset)
+    {
+      this.anchor = aAnchor;
+      this.offset = aOffset;
+    }
+
+    function toNext(aRoot, aCriteria, aNode, aSkipKids) {
+      if (aNode.firstChild && !aSkipKids) {
         return aCriteria(aNode.firstChild) ||
           toNext(aRoot, aCriteria, aNode.firstChild);
       }
@@ -54,8 +81,8 @@
       return null;
     }
 
-    function toPrev(aRoot, aCriteria, aNode) {
-      if (aNode.lastChild) {
+    function toPrev(aRoot, aCriteria, aNode, aSkipKids) {
+      if (aNode.lastChild && !aSkipKids) {
         return aCriteria(aNode.lastChild) ||
           toPrev(aRoot, aCriteria, aNode.lastChild);
       }
@@ -84,12 +111,26 @@
     }
 
     var sobjs = [];
-    if (aNode.nodeType === Node.DOCUMENT_NODE) {
+    switch (aNode.nodeType) {
+    case Node.DOCUMENT_NODE:
       sobjs.push({
         match: ':document',
         role: 'document'
       });
-    } else {
+      break;
+
+    case Node.TEXT_NODE:
+      if ((aNode.previousSibling || aNode.nextSibling) &&
+          /\S/.test(aNode.textContent) && aNode.parentNode.localName != 'label') {
+        sobjs.push({
+          match: ':textnode',
+          role: 'text',
+          text: ':content'
+        });
+      }
+      break;
+
+    default:
       match(aNode, ARIASemantics, sobjs);
       match(aNode, HTMLSemantics, sobjs);
     }
@@ -235,6 +276,11 @@
     },
 
     get text() {
+      var firstChild = this.children[Symbol.iterator]().next().value;
+      if (firstChild) {
+        return '';
+      }
+
       var text = this.prop('text');
       if (!text) {
         return '';
@@ -271,9 +317,18 @@
       var attrs = this.prop('attrs');
       return attrs && attrs[aName];
     },
+    has: function(aName) {
+      switch (aName) {
+        case 'text':
+          return !!this.text;
+        default:
+          return !!this.get(aName);
+      }
+      return false;
+    },
 
     get patterns() {},
-    toPattern: function () {},
+    to: function () {},
 
     get actions() {},
     activate: function () {},

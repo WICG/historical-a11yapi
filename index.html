@@ -168,21 +168,18 @@
           created for (e.g., a tool tip).
         </p>
         <p>
-          A <dfn>value</dfn> of an <a>accessible element</a> is text property
-          of an <a>accessible element</a> created for a control element. It
-          identifies additional information about the control, such as position
-          on a slider or text in an edit field.
+          A <dfn>text</dfn> of an <a>accessible element</a> is text associated
+          with the <a>accessible element</a>.
         </p>
         <p>
-          An <a>accessible element</a> has a set of <dfn>accessible
-          states</dfn>, which is represented by objects that implement the
-          <code>StateSet</code> interface. Conceptually, each one of these
-          <dfn>states</dfn> is a boolean that represents the state the content
-          entity is currently in. For example, if a [[!HTML]]
-          <code>button</code> element is in the focused state (e.g., the user
-          has focused the button by tabbing to it), then its accessible element
-          will have "<code>focused</code>" state in its <a>accessible
-          states</a>.
+          An <a>accessible element</a> has a set of <dfn>states</dfn>, which is
+          represented by objects that implement the <code>StateSet</code>
+          interface. Conceptually, each one of these <dfn>states</dfn> is a
+          boolean that represents the state the content entity is currently in.
+          For example, if a [[!HTML]] <code>button</code> element is in the
+          focused state (e.g., the user has focused the button by tabbing to
+          it), then its accessible element will have "<code>focused</code>"
+          state in its <a>accessible states</a>.
         </p>
         <p>
           An <dfn>attribute</dfn> of an <a>accessible element</a> is property
@@ -341,15 +338,16 @@ interface AccessibleElement {
   attribute DOMString role;
   attribute DOMString name;
   attribute DOMString description;
-  attribute DOMString value;
+  attribute DOMString text;
 
   readonly attribute StateSet states;
+  readonly attribute AttributeSet attributes;
+  readonly attribute PatternSet patterns;
 
-  readonly attribute AttributeMap attributes;
-  any get();
-
-  sequence&lt;DOMString&gt; getPatterns();
-  object toPattern(DOMString type);
+  boolean is(DOMString something);
+  any get(DOMString attribute);
+  boolean has(DOMString attribute);
+  object to(DOMString type);
 
   readonly attribute RelationMap relations;
   AccessibleElement? relativeOf(DOMString type);
@@ -380,7 +378,7 @@ interface AccessibleElement {
           <code>name</code> attribute
         </h3>
         <p>
-          The <dfn><code>name</code></dfn> attribute represents ...
+          The <dfn><code>name</code></dfn> attribute represents <a>name</a>.
         </p>
         <p>
           When setting, ...
@@ -391,7 +389,7 @@ interface AccessibleElement {
           <code>description</code> attribute
         </h3>
         <p>
-          The <dfn><code>description</code></dfn> attribute ...
+          The <dfn><code>description</code></dfn> attribute <a>description</a>
         </p>
         <p>
           When setting, ...
@@ -399,10 +397,10 @@ interface AccessibleElement {
       </section>
       <section>
         <h3>
-          <code>value</code> attribute
+          <code>text</code> attribute
         </h3>
         <p>
-          The <dfn><code>value</code></dfn> attribute ...
+          The <dfn><code>text</code></dfn> attribute represents <a>text</a>.
         </p>
         <p>
           When setting, ...
@@ -413,8 +411,14 @@ interface AccessibleElement {
           <code>states</code> attribute
         </h3>
         <p>
-          The <dfn><code>value</code></dfn> attribute represents the accessible
-          states...
+          The <dfn><code>states</code></dfn> attribute represents the
+          <a>states</a>.
+        </p>
+        <p>
+          Returns a <code>StateSet</code> for all states exposed on the
+          accessible element. If accessible element states are changed then the
+          object reflects the change. The implementation is not required to
+          pre-compute any of the attributes.
         </p>
       </section>
       <section>
@@ -422,7 +426,8 @@ interface AccessibleElement {
           <code>attributes</code> attribute
         </h3>
         <p>
-          The <dfn><code>attributes</code></dfn> attribute represents ...
+          The <dfn><code>attributes</code></dfn> attribute represents
+          <a>attributes</a>.
         </p>
         <p>
           The accessible element can support a number of attributes to express
@@ -430,7 +435,7 @@ interface AccessibleElement {
           accessible element.
         </p>
         <p>
-          Returns a <code>AttributeMap</code> for all object attributes exposed
+          Returns a <code>AttributeSet</code> for all object attributes exposed
           on the accessible element. If accessible element attributes are
           changed then the object reflects the actual state of attributes. The
           implementation is not required to pre-compute any of the attributes.
@@ -465,12 +470,98 @@ interface AccessibleElement {
       </section>
       <section>
         <h3>
+          <code>patterns</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>patterns</code></dfn> attribute represents the
+          <a>patterns</a>.
+        </p>
+        <p>
+          Returns a <code>PatternSet</code> for all patterns exposed on the
+          accessible element. If accessible element states are changed then the
+          object reflects the change. The implementation is not required to
+          pre-compute any of the attributes.
+        </p>
+        <div class="note">
+          Each markup can come with own set of supported patterns. A single
+          <a>accessible elmeent</a> may support several <a>patterns</a>. A
+          typical example of a pattern is <code>table cell</code> pattern which
+          has extra properties like <code>row index</code> and <code>column
+          index</code>.
+        </div>
+      </section>
+      <section>
+        <h3>
+          <code>is</code> method
+        </h3>
+        <p>
+          Return true if the <a>accessible element</a> complies with the given
+          value. Either <a title="states">state</a> or <a>role</a> can be used
+          as a value. In former case the method returns true if the
+          <a>accessible element</a> has the given <a title="states">state</a>.
+          In latter case the method returns true if <a>role</a> of the
+          <a>accessible element</a> belongs to a taxonomy of the given
+          <a>role</a> value.
+        </p>
+        <p>
+          In the example both <code>is</code> method calls on a HTML button
+          return true.
+        </p>
+        <pre class="example highlight">
+let a11ement = document.getElementById("button").accessibleElement;
+console.log(a11ement.is("focusable"));
+console.log(a11ement.is("widget"));
+</pre>
+      </section>
+      <section>
+        <h3>
           <code>get</code> method
         </h3>
         <p>
-          Return a value of the request <a>attribute</a> of this <a>accessible
+          Return a value of the request <a>attribute</a> on this <a>accessible
           element</a>.
         </p>
+      </section>
+      <section>
+        <h3>
+          <code>has</code> method
+        </h3>
+        <p>
+          Return true if the given <a>attribute</a> is present on the
+          <a>accessible element</a>.
+        </p>
+        <div class="note">
+          <p>
+            The method can be used to check whether the <a>accessible
+            element</a> has non empty text properties like <a>name</a>,
+            <a>description</a> or <a>text</a>.
+          </p>
+        </div>
+      </section>
+      <section>
+        <h3>
+          <code>to</code> method
+        </h3>
+        <p>
+          Return an object representing the requested <a>pattern</a> if exposed
+          by the <a>accessible element</a>.
+        </p>
+        <div class="note">
+          <p>
+            The implementation is allowed to return same object or a new one.
+          </p>
+        </div>
+        <p>
+          The example of queries <code>tablecell</code> pattern on a HTML td
+          element and logs its row and column indexes.
+        </p>
+        <pre class="example highlight">
+let cell = document.getElementById("td").accessibleElement.to("tablecell");
+if (cell) {
+  console.log(cell.get("rowindex"));
+  console.log(cell.get("colindex"));
+}
+</pre>
       </section>
       <section>
         <h3>
@@ -521,7 +612,12 @@ interface AccessibleElement {
       <pre class="idl">
 [Constructor(AccessibleElement anchor, optional AccessibleElement root)]
 interface AccessiblePin {
+  AccessiblePin? set(AccessibleElement anchor, Offset offset);
   AccessiblePin? move(Where where, optional Criteria criteria);
+
+  readonly attribute AccessibleElement root;
+  readonly attribute AccessibleElement? anchor;
+  readonly attribute Offset;
 };
 
 enum Where {
@@ -529,8 +625,25 @@ enum Where {
   "backward"
 };
 
-callback Criteria = "at "or "next" (AccessibleElement);
+enum Offset {
+  "before",
+  "at",
+  "after"
+};
+
+callback Criteria = boolean (AccessibleElement);
 </pre>
+      <section>
+        <h3>
+          <code>set</code> method
+        </h3>
+        <p>
+          Sets the <a>accessible pin</a> to the given accessible and offset.
+        </p>
+        <p>
+          Returns a reference to itself if succeeded. Otherwise returns null.
+        </p>
+      </section>
       <section>
         <h3>
           <code>move</code> method
@@ -540,6 +653,75 @@ callback Criteria = "at "or "next" (AccessibleElement);
           <a>accessible tree</a> according to the criteria. If the criteria is
           omitted then it moves the pin to a next/previous accessible element
           in the <a>accessible tree</a>.
+        </p>
+        <p>
+          Returns a reference to itself if succeeded. Otherwise returns null.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>root</code> attribute
+        </h3>
+        <p>
+          Returns the <a>accessible pin</a>'s anchor <a>accessible element</a>.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>anchor</code> attribute
+        </h3>
+        <p>
+          Returns the <a>accessible pin</a>'s anchor <a>accessible element</a>.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>offset</code> attribute
+        </h3>
+        <p>
+          Returns the <a>accessible pin</a>'s offset relative its anchor
+          <a>accessible element</a>.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>Where</code> constants
+        </h3>
+        <p>
+          <code><dfn>forward</dfn></code> is used to move an <a>accessible
+          pin</a> forward in an <a>accessible tree</a> it resides in.
+        </p>
+        <p>
+          <code><dfn>backward</dfn></code> is used to move an <a>accessible
+          pin</a> backward in an <a>accessible tree</a> it resides in.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>Offset</code> constants
+        </h3>
+        <p>
+          <code><dfn>before</dfn></code> is used to set an <a>accessible
+          pin</a> right before its anchor.
+        </p>
+        <p>
+          <code><dfn>at</dfn></code> is used to set an <a>accessible pin</a> at
+          the anchor. For example, if the pin follows the focus, and a button
+          is focused then the pin is <code>at</code> the button.
+        </p>
+        <p>
+          <code><dfn>after</dfn></code> is used to set an <a>accessible pin</a>
+          right after its anchor.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>Criteria</code> function
+        </h3>
+        <p>
+          <code><dfn>criteria</dfn></code> is a function defines rules that
+          describe how <a>accessible pin</a> should be moved within an
+          <a>accessible tree</a>.
         </p>
       </section>
     </section>

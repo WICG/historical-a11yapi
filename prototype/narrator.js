@@ -18,46 +18,55 @@ window.Narrator = {
 
   next: function (aCriteria) {
     this.shh();
-
-    var criteria = aCriteria && this.criterias[aCriteria];
-    if (this.pin.move('forward', criteria)) {
-      var el = this.pin.anchor;
-      switch (el.role) {
-      case 'label': // skip labels
-        return this.next();
-
-      case 'paragraph':
-      {
-        var hasContent = false;
-        var subpin = new AccessiblePin(el, el);
-        while (subpin.move('forward')) {
-          this.sayObj(subpin.anchor);
-          hasContent = true;
-        }
-        if (!hasContent) {
-          this.sayObj(el);
-        }
-        this.pin.set(el, 'after');
-        break;
-      }
-      default:
-        this.sayObj(el);
-      }
-    } else {
+    if (!this.move('forward', 'after', aCriteria)) {
       this.say('Reached the end.');
-      this.pin.anchor = this.root;
     }
   },
   prev: function (aCriteria) {
     this.shh();
-
-    var criteria = aCriteria && this.criterias[aCriteria];
-    if (this.pin.move('backward', criteria)) {
-      this.sayObj(this.pin.anchor);
-    } else {
+    if (!this.move('backward', 'before', aCriteria)) {
       this.say('Reached the beginning.');
-      this.pin.anchor = this.root;
     }
+  },
+
+  move: function (aDir, aSkipOffset, aCriteria) {
+    var criteria = aCriteria && this.criterias[aCriteria];
+    if (!this.pin.move(aDir, criteria)) {
+      this.pin.anchor = this.root;
+      return false;
+    }
+
+    var el = this.pin.anchor;
+    switch (el.role) {
+    case 'label': // skip labels
+      return this.move(aDir);
+
+    case 'fraction':
+      this.sayObj(el);
+      this.pin.set(el, aSkipOffset);
+      return true;
+
+    case 'paragraph':
+    {
+      var hasContent = false;
+      var tmppin = this.pin;
+      this.pin = new AccessiblePin(el, el);
+      while (this.move('forward', 'after', aCriteria)) {
+        hasContent = true;
+      }
+      if (!hasContent) {
+        this.sayObj(el);
+      }
+      this.pin = tmppin;
+      this.pin.set(el, aSkipOffset);
+      return true;
+    }
+
+    default:
+      this.sayObj(el);
+    }
+
+    return true;
   },
 
   sayObj: function (aObj) {
@@ -92,7 +101,9 @@ window.Narrator = {
         break;
 
       default:
-        this.say(aObj.role);
+        if (aObj.role) {
+          this.say(aObj.role);
+        }
     };
 
     var text = aObj.text;

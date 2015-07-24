@@ -46,10 +46,10 @@
       }
 
       if (res) {
-        this.anchor = res;
-        if (res.text && !(typeof aCriteria == 'function')) {
+        console.log('traversed: ');
+        console.log(res.DOMNode);
 
-        }
+        this.anchor = res;
         this.offset = 'at';
       }
       return !!res;
@@ -139,8 +139,6 @@
     if (sobjs.some(function (el) {
         return el.match != ":role";
       })) {
-      console.log('traversed: ' + aNode + ', matched: ');
-      sobjs.forEach(console.log.bind(console));
       return new A11ement(aNode, sobjs);
     }
 
@@ -312,13 +310,16 @@
       return new Set(list);
     },
 
-    is: function(aState) {
+    is: function(aProp) {
+      if (aProp == this.role) {
+        return true;
+      }
       var states = this.prop('states');
       if (states) {
-        if (typeof states[aState] == 'function') {
-          return states[aState](this.DOMNode);
+        if (typeof states[aProp] == 'function') {
+          return states[aProp](this.DOMNode);
         }
-        return this.resolveSelector(states[aState]);
+        return this.resolveSelector(states[aProp]);
       }
       return false;
     },

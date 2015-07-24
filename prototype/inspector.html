@@ -1,91 +1,93 @@
 <!doctype html>
 <meta charset='utf-8'>
 <title>Inspector: an example of accessibility inspection tool.</title>
-<script src="html.js"></script>
 <script src="aria.js"></script>
+<script src="html.js"></script>
+<script src="mathml.js"></script>
 <script src="a11yapi.js"></script>
 <script src="inspector.js"></script>
 
 <style>
+body {
+  display: flex;
+}
 #inspector {
-  margin: 20px;
-  padding-left: 15px;
-  padding-right: 50px;
-  position: fixed;
-  right: 0;
-  top: 0;
+  margin-left: 5px;
+  flex-grow: 1;
+  height: 95vh;
+  width: 30vw;
   overflow: auto;
-  height: 90vh;
-  border-left: 1px solid gray;
+  display: flex;
+  flex-direction: column;
+}
+#inspector_tree {
+  overflow: auto;
+}
+#inspector_props {
+  height: 20vh;
+  overflow: auto;
 }
 #content {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 85%;
+  flex-grow: 3;
+}
+
+.header {
+  margin: 2px;
+  padding: 2px 2px 2px 10px; /* top right bottom left */
+  background-color: #f7901e;
+}
+.panel {
+  margin: 2px;
+  padding: 2px;
 }
 
 li {
   list-style-type: none;
 }
 
+/*
 li.container {
   list-style-type: disclosure-open;
 }
-li.container:before {
-  content: '\23F7';
-  padding-right: 5px;
-}
 li.container[closed] {
   list-style-type: disclosure-close;
+}*/
+
+li {
+  margin: 2px;
+  padding: 2px;
+}
+li.container:before {
+  content: '\25BE';
+  padding-right: 5px;
+}
+li.container[closed]:before {
+  content: '\25B8';
+  padding-right: 5px;
+}
+li[selected] {
+  background-color: #FFA;
 }
 </style>
+<script>
+function init()
+{
+  var treeEl = document.getElementById('inspector_tree');
+  var propsEl = document.getElementById('inspector_props');
+  Inspector.attach(treeEl, propsEl,
+                   document.getElementById('content').contentDocument);
+}
+</script>
 
-<body onload="Inspector.attach('inspector_tree', 'inspector_props');">
-<div id="content">
-<h1>A mighty mouse</h1>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<button disabled>a personal button of mighty mouse</button>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may. This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p><p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-<p>This tale is about mighty mouse who may everything it may.</p>
-</div>
+<body onload="init();">
+
+<iframe id="content" src="./inspector_content.html"></iframe>
 
 <div id="inspector">
-  <div>Inspector tool<hr></div>
-  <div id="inspector_tree"></div>
-  <div id="inspector_props"></div>
+  <div id="inspector_treeheader" class="header">Tree</div>
+  <div id="inspector_tree" class="panel"></div>
+  <div id="inspector_propsheader" class="header">Properties</div>
+  <div id="inspector_props" class="panel"></div>
 </div>
+
 </body>

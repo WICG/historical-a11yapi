@@ -259,7 +259,7 @@
 
     get description() {
       var rules = [];
-      for (var obj in this.sobj) {
+      for (var obj of this.sobjs) {
         if ('description' in obj) {
           rules = rules.concat(obj.description);
         }
@@ -310,6 +310,17 @@
       return new Set(list);
     },
 
+    get attributes() {
+      var set = new Set();
+      var attrs = this.prop('attrs');
+      for (var a in attrs) {
+        set.add(a);
+      }
+      return set;
+    },
+
+    get patterns() {},
+
     is: function(aProp) {
       if (aProp == this.role) {
         return true;
@@ -323,8 +334,6 @@
       }
       return false;
     },
-
-    get attributes() {},
 
     get: function(aName) {
       var attrs = this.prop('attrs');
@@ -349,16 +358,6 @@
       return items[0] && items[0].accessibleElement;
     },
 
-    relativeOf: function(aType) {
-      var rels = this.prop('rels');
-      if (!rels || !rels[aType])
-        return null;
-
-      var items = this.resolveNodeSelector(rels[aType]);
-      return items[0] && items[0].accessibleElement;
-    },
-
-    get patterns() {},
     to: function () {},
 
     get actions() {},
@@ -452,7 +451,7 @@
         if (this.DOMNode.hasAttribute(match[1])) {
           var ids = this.DOMNode.getAttribute(match[1]).split();
           for (var id of ids) {
-            var el = document.getElementById('id');
+            var el = document.getElementById(id);
             if (el) {
               text += el.textContent;
             }

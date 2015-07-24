@@ -11,6 +11,7 @@
   {
     this.anchor = aAnchor;
     this.offset = 'at';
+    this.root = aRoot;
     this.rootNode = aRoot.DOMNode;
 
     this.move = function(aWhere, aCriteria)
@@ -21,12 +22,10 @@
       var critera = function(aNode) {
         var obj = A11ementFor(aNode);
         if (obj) {
-          var offset = (aCriteria && aCriteria.call(null, obj)) || 'at';
-          if (offset != 'next') {
-            return { anchor: obj, offset: offset };
-          }
-          return null;
+          if (!(typeof aCriteria == 'function') || aCriteria.call(null, obj))
+            return obj;
         }
+        return null;
       }
 
       var res = null;
@@ -46,9 +45,20 @@
           return false;
       }
 
-      this.anchor = res && res.anchor;
-      this.offset = res && res.offset;
-      return !!this.anchor;
+      if (res) {
+        this.anchor = res;
+        if (res.text && !(typeof aCriteria == 'function')) {
+
+        }
+        this.offset = 'at';
+      }
+      return !!res;
+    }
+
+    this.set = function(aAnchor, aOffset)
+    {
+      this.anchor = aAnchor;
+      this.offset = aOffset;
     }
 
     function toNext(aRoot, aCriteria, aNode, aSkipKids) {
@@ -101,12 +111,26 @@
     }
 
     var sobjs = [];
-    if (aNode.nodeType === Node.DOCUMENT_NODE) {
+    switch (aNode.nodeType) {
+    case Node.DOCUMENT_NODE:
       sobjs.push({
         match: ':document',
         role: 'document'
       });
-    } else {
+      break;
+
+    case Node.TEXT_NODE:
+      if ((aNode.previousSibling || aNode.nextSibling) &&
+          /\S/.test(aNode.textContent) && aNode.parentNode.localName != 'label') {
+        sobjs.push({
+          match: ':textnode',
+          role: 'text',
+          text: ':content'
+        });
+      }
+      break;
+
+    default:
       match(aNode, ARIASemantics, sobjs);
       match(aNode, HTMLSemantics, sobjs);
     }
@@ -252,6 +276,11 @@
     },
 
     get text() {
+      var firstChild = this.children[Symbol.iterator]().next().value;
+      if (firstChild) {
+        return '';
+      }
+
       var text = this.prop('text');
       if (!text) {
         return '';
@@ -288,9 +317,18 @@
       var attrs = this.prop('attrs');
       return attrs && attrs[aName];
     },
+    has: function(aName) {
+      switch (aName) {
+        case 'text':
+          return !!this.text;
+        default:
+          return !!this.get(aName);
+      }
+      return false;
+    },
 
     get patterns() {},
-    toPattern: function () {},
+    to: function () {},
 
     get actions() {},
     activate: function () {},

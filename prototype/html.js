@@ -129,6 +129,11 @@ var HTMLSemantics = {
     text: ':prop(value)'
   },
 
+  label: {
+    match: 'label',
+    role: 'label'
+  },
+
   p: {
     match: 'p',
     role: 'paragraph',

@@ -19,8 +19,30 @@ window.Narrator = {
   next: function (aCriteria) {
     this.shh();
 
-    if (this.pin.move('forward', this.criterias[aCriteria])) {
-      this.sayObj(this.pin.anchor);
+    var criteria = aCriteria && this.criterias[aCriteria];
+    if (this.pin.move('forward', criteria)) {
+      var el = this.pin.anchor;
+      switch (el.role) {
+      case 'label': // skip labels
+        return this.next();
+
+      case 'paragraph':
+      {
+        var hasContent = false;
+        var subpin = new AccessiblePin(el, el);
+        while (subpin.move('forward')) {
+          this.sayObj(subpin.anchor);
+          hasContent = true;
+        }
+        if (!hasContent) {
+          this.sayObj(el);
+        }
+        this.pin.set(el, 'after');
+        break;
+      }
+      default:
+        this.sayObj(el);
+      }
     } else {
       this.say('Reached the end.');
       this.pin.anchor = this.root;
@@ -29,7 +51,8 @@ window.Narrator = {
   prev: function (aCriteria) {
     this.shh();
 
-    if (this.pin.move('backward', this.criterias[aCriteria])) {
+    var criteria = aCriteria && this.criterias[aCriteria];
+    if (this.pin.move('backward', criteria)) {
       this.sayObj(this.pin.anchor);
     } else {
       this.say('Reached the beginning.');
@@ -48,11 +71,18 @@ window.Narrator = {
       this.say(description);
     }
 
-    this.say(aObj.role);
     switch (aObj.role) {
       case 'heading':
+        this.say(aObj.role);
         this.say(`level ${aObj.get('level')}`);
         break;
+
+      case 'paragraph':
+      case 'text':
+        break;
+
+      default:
+        this.say(aObj.role);
     };
 
     var text = aObj.text;
@@ -82,11 +112,8 @@ window.Narrator = {
   },
 
   criterias: {
-    default: function(aEl) {
-      return aEl.text != '' ? 'after' : 'at';
-    },
     heading: function(aEl) {
-      return aEl.role == 'heading' ? 'at' : 'next';
+      return aEl.role == 'heading';
     }
   }
 };
@@ -115,10 +142,10 @@ var Controller = {
 
     switch (key) {
     case 'ArrowDown':
-      Narrator.next('default');
+      Narrator.next();
       break;
     case 'ArrowUp':
-      Narrator.prev('default');
+      Narrator.prev();
       break;
 
     case 'h':

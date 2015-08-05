@@ -17,6 +17,29 @@ const HTMLControlName = [
   ':parent(label)'
 ];
 
+function createHTMLTableCell(aEl)
+{
+  return {
+    get rowindex() {
+      var cnt = 0;
+      var row = aEl.parentNode;
+      while ((row = row.previousElementSibling)) {
+        cnt++;
+      }
+      return cnt;
+    },
+    get colindex() {
+      var cnt = 0;
+      var cell = aEl;
+      while ((cell = cell.previousElementSibling)) {
+        console.log(cell);
+        cnt += cell.colSpan;
+      }
+      return cnt;
+    }
+  };
+}
+
 var HTMLSemantics = {
   a: {
     match: 'a[href]',
@@ -138,5 +161,41 @@ var HTMLSemantics = {
     match: 'p',
     role: 'paragraph',
     text: ':content'
+  },
+
+  table: {
+    match: 'table',
+    role: 'table',
+    name: ':content(caption)',
+    patterns: {
+      table: function(aEl) {
+        return {
+          get rowcount() {
+            return aEl.rows.length;
+          },
+          get colcount() {
+            return aEl.rows[0].children.length;
+          }
+        };
+      }
+    }
+  },
+
+  td: {
+    match: 'td',
+    role: 'cell',
+    text: ':content',
+    patterns: {
+      cell: createHTMLTableCell
+    }
+  },
+
+  th: {
+    match: 'th',
+    role: 'headercell',
+    text: ':content',
+    patterns: {
+      cell: createHTMLTableCell
+    }
   }
 };

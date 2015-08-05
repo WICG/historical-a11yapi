@@ -259,7 +259,7 @@
 
     get description() {
       var rules = [];
-      for (var obj in this.sobj) {
+      for (var obj of this.sobjs) {
         if ('description' in obj) {
           rules = rules.concat(obj.description);
         }
@@ -310,21 +310,39 @@
       return new Set(list);
     },
 
+    get attributes() {
+      var set = new Set();
+      var attrs = this.prop('attrs');
+      for (var a in attrs) {
+        set.add(a);
+      }
+      return set;
+    },
+
+    get patterns() {
+      var set = new Set();
+      var values = this.prop('patterns');
+      for (var v in values) {
+        set.add(v);
+      }
+      return set;
+    },
+
     is: function(aProp) {
       if (aProp == this.role) {
         return true;
       }
+
       var states = this.prop('states');
       if (states) {
         if (typeof states[aProp] == 'function') {
           return states[aProp](this.DOMNode);
         }
-        return this.resolveSelector(states[aProp]);
+        return states[aProp] && this.resolveSelector(states[aProp]);
       }
-      return false;
-    },
 
-    get attributes() {},
+      return !!this.to(aProp);
+    },
 
     get: function(aName) {
       var attrs = this.prop('attrs');
@@ -349,8 +367,16 @@
       return items[0] && items[0].accessibleElement;
     },
 
-    get patterns() {},
-    to: function () {},
+    to: function (aPattern) {
+      var patterns = this.prop('patterns');
+      if (patterns) {
+        var constructor = patterns[aPattern];
+        if (constructor) {
+          return constructor(this.DOMNode);
+        }
+      }
+      return null;
+    },
 
     get actions() {},
     activate: function () {},
@@ -443,7 +469,7 @@
         if (this.DOMNode.hasAttribute(match[1])) {
           var ids = this.DOMNode.getAttribute(match[1]).split();
           for (var id of ids) {
-            var el = document.getElementById('id');
+            var el = document.getElementById(id);
             if (el) {
               text += el.textContent;
             }
@@ -485,7 +511,16 @@
       }
 
       // :content
-      if (aSelector === ':content') {
+      match = aSelector.match(/\:content(?:\((.+)\))?/);
+      if (match) {
+        if (match[1]) {
+          var text = '';
+          var nodes = this.DOMNode.querySelectorAll(match[1]);
+          for (var i = 0; i < nodes.length; ++i) {
+            text += nodes[i].textContent;
+          }
+          return text;
+        }
         return this.DOMNode.textContent;
       }
 

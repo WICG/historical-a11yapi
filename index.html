@@ -103,14 +103,9 @@
           Things we want feedback on!
         </h3>
         <ul>
-          <li>Should we specify hasAnyOf() and hasAllOf() for StateSet and
-          AttributeMap? Or should we just rely on JS's Array interface to do
-          the same thing? Pros:... Cons:....
-          </li>
-          <li>Is it ok to use the term "attributes" for accessible attributes
-          in this spec? or will it cause confusion with DOM attributes?
-          (suggestion is to maybe rename "properties" if it's going to be
-          confusing)
+          <li>Should we specify hasAnyOf() and hasAllOf() for Set interface? Or
+          should we just rely on JS's Array interface to do the same thing?
+          Pros:... Cons:....
           </li>
         </ul>
       </section>
@@ -340,9 +335,9 @@ interface AccessibleElement {
   attribute DOMString description;
   attribute DOMString text;
 
-  readonly attribute StateSet states;
-  readonly attribute AttributeSet attributes;
-  readonly attribute PatternSet patterns;
+  readonly attribute Set states;
+  readonly attribute Set attributes;
+  readonly attribute Set patterns;
 
   boolean is(DOMString something);
   any get(DOMString attribute);
@@ -415,10 +410,9 @@ interface AccessibleElement {
           <a>states</a>.
         </p>
         <p>
-          Returns a <code>StateSet</code> for all states exposed on the
-          accessible element. If accessible element states are changed then the
-          object reflects the change. The implementation is not required to
-          pre-compute any of the attributes.
+          Returns a <code>Set</code> for all states exposed on the accessible
+          element. The implementation is not required to pre-compute any of the
+          states.
         </p>
       </section>
       <section>
@@ -435,10 +429,9 @@ interface AccessibleElement {
           accessible element.
         </p>
         <p>
-          Returns a <code>AttributeSet</code> for all object attributes exposed
-          on the accessible element. If accessible element attributes are
-          changed then the object reflects the actual state of attributes. The
-          implementation is not required to pre-compute any of the attributes.
+          Returns a <code>Set</code> for all object attributes exposed on the
+          accessible element. The implementation is not required to pre-compute
+          any of the attributes.
         </p>
         <div class="note">
           <p>
@@ -477,14 +470,13 @@ interface AccessibleElement {
           <a>patterns</a>.
         </p>
         <p>
-          Returns a <code>PatternSet</code> for all patterns exposed on the
-          accessible element. If accessible element states are changed then the
-          object reflects the change. The implementation is not required to
-          pre-compute any of the attributes.
+          Returns a <code>Set</code> for all patterns exposed on the accessible
+          element. The implementation is not required to pre-compute any of the
+          values.
         </p>
         <div class="note">
           Each markup can come with own set of supported patterns. A single
-          <a>accessible elmeent</a> may support several <a>patterns</a>. A
+          <a>accessible element</a> may support several <a>patterns</a>. A
           typical example of a pattern is <code>table cell</code> pattern which
           has extra properties like <code>row index</code> and <code>column
           index</code>.
@@ -496,21 +488,32 @@ interface AccessibleElement {
         </h3>
         <p>
           Return true if the <a>accessible element</a> complies with the given
-          value. Either <a title="states">state</a> or <a>role</a> can be used
-          as a value. In former case the method returns true if the
-          <a>accessible element</a> has the given <a title="states">state</a>.
-          In latter case the method returns true if <a>role</a> of the
-          <a>accessible element</a> belongs to a taxonomy of the given
-          <a>role</a> value.
+          value. A <a title="states">state</a>, <a>role</a> or <a>pattern</a>
+          can be used as a value. In case of <a>states</a> the method returns
+          true if the <a>accessible element</a> has the given <a title=
+          "states">state</a>. In case of <a>role</a> the method returns true if
+          the <a>accessible element</a> <a>role</a> belongs to a role taxonomy
+          of the given <a>role</a> value. In case of <a>pattern</a> value the
+          method returns true if the <a>accessible element</a> supports the
+          given pattern.
         </p>
+        <div class="note">
+          The taxonomy provider must make sure that <a>role</a> and
+          <a>states</a> taxonomies don't overlap in names. If a markup have a
+          <a>pattern</a> and a <a>role</a> of same name then each <a>accessible
+          element</a> having the <a>role</a> in its role taxonomy must
+          implement a <a>pattern</a> of same naming. For example, HTML table
+          cell has <code>cell</code> <a>role</a> and exposes <code>cell</code>
+          pattern.
+        </div>
         <p>
           In the example both <code>is</code> method calls on a HTML button
           return true.
         </p>
         <pre class="example highlight">
-let a11ement = document.getElementById("button").accessibleElement;
-console.log(a11ement.is("focusable"));
-console.log(a11ement.is("widget"));
+let al = document.getElementById("button").accessibleElement;
+console.log(al.is("focusable"));
+console.log(al.is("widget"));
 </pre>
       </section>
       <section>
@@ -544,11 +547,17 @@ console.log(a11ement.is("widget"));
         </h3>
         <p>
           Return an object representing the requested <a>pattern</a> if exposed
-          by the <a>accessible element</a>.
+          by the <a>accessible element</a>. Otherwise returns null.
         </p>
         <div class="note">
           <p>
             The implementation is allowed to return same object or a new one.
+          </p>
+        </div>
+        <div class="note">
+          <p>
+            The implementation is allowed to expose predefined set of patterns
+            right on an <a>accessible element</a> object by default.
           </p>
         </div>
         <p>
@@ -558,8 +567,8 @@ console.log(a11ement.is("widget"));
         <pre class="example highlight">
 let cell = document.getElementById("td").accessibleElement.to("tablecell");
 if (cell) {
-  console.log(cell.get("rowindex"));
-  console.log(cell.get("colindex"));
+  console.log(cell.rowindex);
+  console.log(cell.colindex);
 }
 </pre>
       </section>
@@ -727,22 +736,17 @@ callback Criteria = boolean (AccessibleElement);
     </section>
     <section>
       <h2>
-        <code>StateSet</code> interface
+        <code>Set</code> interface
       </h2>
       <p>
-        live object for all accessible states of an accessible element, i.e. if
-        the states of the accessible element changes then the object reflects
-        that. Implementation is not required to compute any state until
-        requested.
-      </p>
-      <p class="issue">
-        Describe why live?
+        an object to list values of a given accessible property of an
+        accessible element, for example, <a>states</a>, <a title=
+        "attribute">attributes</a> or <a title="pattern">patterns</a>.
+        Implementation is not required to compute any value until requested.
       </p>
       <pre class="idl">
-interface StateSet {
+interface Set {
   readonly setlike&lt;DOMString&gt;;
-  boolean hasAnyOf(DOMString... states);
-  boolean hasAllOf(DOMString... states);
 };
 </pre>
       <section class="informative">
@@ -754,29 +758,12 @@ interface StateSet {
           states.
         </p>
         <pre class="example highlight">
-let accEl = document.getElementById("foo").AccessibleElement;
-for (let state of accElm.states) {
+let al = document.getElementById("foo").accessibleElement;
+for (let state of al.states) {
   console.log(state);
 }
 </pre>
       </section>
-    </section>
-    <section>
-      <h2>
-        <code>AttributeMap</code> interface
-      </h2>
-      <p>
-        The <code>AttributeMap</code> is an interface aimed to work with {name,
-        value} pairs of accessible attributes.
-      </p>
-      <pre class="idl">
-interface AttributeMap {
-  readonly maplike&lt;DOMString, any&gt;;
-
-  boolean hasAnyOf(Object map); // Needs more work
-  boolean hasAllOf(Object map); // Needs more work
-};
-</pre>
     </section>
     <section>
       <h2>

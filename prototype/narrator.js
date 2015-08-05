@@ -106,6 +106,17 @@ window.Narrator = {
         }
     };
 
+    if (aObj.is('table')) {
+      var table = aObj.to("table");
+      this.say(`${table.rowcount} rows, ${table.colcount} columns`);
+    }
+    else if (aObj.is('cell')) {
+      var cell = aObj.to('cell');
+      console.log("cell boejct");
+      console.log(cell);
+      this.say(`row ${cell.rowindex}, column ${cell.colindex}`);
+    }
+
     var text = aObj.text;
     if (text) {
       this.say(text);

@@ -67,10 +67,34 @@ window.Inspector = {
       }
       this.uiProp('Attributes', str);
     }
+
+    var patterns = aAl.patterns;
+    if (patterns.size) {
+      var str = '';
+      var needcomma = false;
+      for (var v of patterns.values()) {
+        if (needcomma) {
+          str += ', ';
+        }
+        str += v;
+        needcomma = true;
+      }
+      this.uiProp('Patterns', str);
+
+      for (var v of patterns.values()) {
+        var pattern = aAl.to(v);
+        for (var p in pattern) {
+          console.log(p);
+          console.log(pattern[p]);
+          console.log(pattern[p] == '');
+          this.uiProp(p, pattern[p]);
+        }
+      }
+    }
   },
 
   uiProp: function(aName, aValue) {
-    if (aValue) {
+    if (typeof aValue != 'string' || aValue != '') {
       this.propsEl.innerHTML += `<div>${aName}: ${aValue}</div>`;
     }
   },

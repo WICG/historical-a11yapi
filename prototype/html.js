@@ -32,7 +32,6 @@ function createHTMLTableCell(aEl)
       var cnt = 0;
       var cell = aEl;
       while ((cell = cell.previousElementSibling)) {
-        console.log(cell);
         cnt += cell.colSpan;
       }
       return cnt;

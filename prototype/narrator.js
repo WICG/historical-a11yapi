@@ -112,8 +112,6 @@ window.Narrator = {
     }
     else if (aObj.is('cell')) {
       var cell = aObj.to('cell');
-      console.log("cell boejct");
-      console.log(cell);
       this.say(`row ${cell.rowindex}, column ${cell.colindex}`);
     }
 

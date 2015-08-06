@@ -1,7 +1,6 @@
 window.Inspector = {
   attach: function(aTreeEl, aPropsEl, aInspectedEl) {
     aTreeEl.innerHTML = '<ul></ul>';
-    console.log(aInspectedEl.accessibleElement);
     this.iterateTree(aInspectedEl.accessibleElement, aTreeEl.firstChild);
     this.propsEl = aPropsEl;
   },
@@ -27,7 +26,6 @@ window.Inspector = {
   },
 
   itemClicked: function(aAl, aEvent) {
-    console.log(aAl);
     if (this.selectedEl) {
       this.selectedEl.removeAttribute('selected');
     }
@@ -84,12 +82,29 @@ window.Inspector = {
       for (var v of patterns.values()) {
         var pattern = aAl.to(v);
         for (var p in pattern) {
-          console.log(p);
-          console.log(pattern[p]);
-          console.log(pattern[p] == '');
           this.uiProp(p, pattern[p]);
         }
       }
+    }
+
+    var rels = aAl.relations;
+    if (rels.size) {
+      var html = "<pre>Relations: ";
+      for (var r of rels) {
+        var als = aAl.relativeOfAll(r);
+        if (als.length) {
+          html += `\n\t${r}: `;
+          for (var al of als) {
+            html += `{ role: ${al.role}`;
+            if (al.name) {
+              html += `, name: ${al.name}`;
+            }
+            html += '}';
+          }
+        }
+      }
+      html += "</pre>";
+      this.propsEl.innerHTML += html;
     }
   },
 

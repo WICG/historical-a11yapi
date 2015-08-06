@@ -12,6 +12,20 @@ const ARIASemantics = {
       ':idrefs(aria-describedby)'
     ]
   },
+  tab: {
+    match: '[role="tab"]',
+    role: 'tab',
+    rels: {
+      controlled: ':idrefs(aria-controls)'
+    }
+  },
+  tabpanel: {
+    match: '[role="tabpanel"]',
+    role: 'tabpanel',
+    rels: {
+      controller: '[aria-controls~=:id]'
+    }
+  },
   button: {
     match: '[role="button"]',
     role: 'button',

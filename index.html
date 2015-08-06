@@ -168,21 +168,19 @@
         </p>
         <p>
           An <a>accessible element</a> has a set of <dfn>states</dfn>, which is
-          represented by objects that implement the <code>StateSet</code>
-          interface. Conceptually, each one of these <dfn>states</dfn> is a
-          boolean that represents the state the content entity is currently in.
-          For example, if a [[!HTML]] <code>button</code> element is in the
-          focused state (e.g., the user has focused the button by tabbing to
-          it), then its accessible element will have "<code>focused</code>"
-          state in its <a>accessible states</a>.
+          represented by <code>Set</code> like object. Conceptually, each one
+          of these <dfn>states</dfn> is a boolean that represents the state the
+          content entity is currently in. For example, if a [[!HTML]]
+          <code>button</code> element is in the focused state (e.g., the user
+          has focused the button by tabbing to it), then its accessible element
+          will have "<code>focused</code>" state in its <a>accessible
+          states</a>.
         </p>
         <p>
           An <dfn>attribute</dfn> of an <a>accessible element</a> is property
-          that provides extra information about its <a>content entity</a>.
-          Attributes are represented by objects that implement the
-          <code>AttributeMap</code> interface. For example, autocomplete
-          feature on an <code>input</code> element would map to
-          <code>autocomplete</code> attribute with possible values
+          that provides extra information about its <a>content entity</a>. For
+          example, autocomplete feature on an <code>input</code> element would
+          map to <code>autocomplete</code> attribute with possible values
           <code>inline</code>, <code>list</code>, or <code>both</code>.
         </p>
         <p>
@@ -202,7 +200,7 @@
           supported by the <a>content entity</a>. An action can be performed on
           a content entity by the user (e.g., a button click). Accessible
           actions are represented by objects that implement the
-          <code>ActionMap</code> interface.
+          <code>Set</code> interface.
         </p>
         <p>
           An <dfn>interaction</dfn> is device dependent interaction, such as
@@ -338,14 +336,15 @@ interface AccessibleElement {
   readonly attribute Set states;
   readonly attribute Set attributes;
   readonly attribute Set patterns;
+  readonly attribute Set relations;
 
   boolean is(DOMString something);
   any get(DOMString attribute);
   boolean has(DOMString attribute);
-  object to(DOMString type);
+  object to(DOMString pattern);
 
-  readonly attribute RelationMap relations;
   AccessibleElement? relativeOf(DOMString type);
+  sequence&lt;AccessibleElement&gt; relativeOfAll(DOMString type);
 
   readonly attribute ActionMap actions;
   void activate(DOMString action);
@@ -367,6 +366,17 @@ interface AccessibleElement {
           role that is either developer defined or a role as per [[!WAI-ARIA]]
           (e.g., "button", "menu", "textfield").
         </p>
+        <div class="note">
+          For the author convenience the attribute value may be a space
+          separated list of <a title="role">roles</a>. This is useful when an
+          <a>accessible element</a> should express semantics of both roles but
+          the taxonomy misses a separate role for that. For example, a check
+          menu item <a>accessible element</a> may have <code>menuitem
+          checkbox</code> role if the role taxonomy doesn't have
+          <code>checkmenuitem</code> <a>role</a>. In this case <code>is</code>
+          method is supposed to return true for both <code>checkbox</code> and
+          <code>menuitem</code> values.
+        </div>
       </section>
       <section>
         <h3>
@@ -484,6 +494,21 @@ interface AccessibleElement {
       </section>
       <section>
         <h3>
+          <code>relations</code> attribute
+        </h3>
+        <p>
+          The <dfn><code>relations</code></dfn> attribute represents the
+          <a title="relation type">relation types</a> on the <a>accessible
+          element</a>.
+        </p>
+        <p>
+          Returns a <code>Set</code> for all <a title="relation type">relation
+          types</a> that the <a>accessible element</a> has. The implementation
+          is not required to pre-compute any of the relations.
+        </p>
+      </section>
+      <section>
+        <h3>
           <code>is</code> method
         </h3>
         <p>
@@ -561,16 +586,39 @@ console.log(al.is("widget"));
           </p>
         </div>
         <p>
-          The example of queries <code>tablecell</code> pattern on a HTML td
-          element and logs its row and column indexes.
+          The example of queries <code>cell</code> pattern on a HTML td element
+          and logs its row and column indexes.
         </p>
         <pre class="example highlight">
-let cell = document.getElementById("td").accessibleElement.to("tablecell");
-if (cell) {
+var al = document.getElementById("td").accessibleElement;
+if (al.is("cell")) {
+  let cell = al.to("cell");
   console.log(cell.rowindex);
   console.log(cell.colindex);
 }
 </pre>
+      </section>
+      <section>
+        <h3>
+          <code>relativeOf</code> method
+        </h3>
+        <p>
+          Returns a relative <a>accessible element</a> of the given <a>relation
+          type</a> for this <a>accessible element</a> if any. If the
+          <a>accessible element</a> has multiple relatives then the first one
+          is returned.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>relativeOfAll</code> method
+        </h3>
+        <p>
+          Returns all relative <a title="accessible element">accessible
+          elements</a> of the given relation type for this <a>accessible
+          element</a>. If there are no relatives then empty sequence is
+          returned.
+        </p>
       </section>
       <section>
         <h3>
@@ -593,11 +641,6 @@ if (cell) {
           Returns <code>AccessibleChildren</code> object containing all child
           <a title="accessible element">accessible elements</a>.
         </p>
-      </section>
-      <section>
-        <h3>
-          attribute
-        </h3>
       </section>
       <section>
         <h3>

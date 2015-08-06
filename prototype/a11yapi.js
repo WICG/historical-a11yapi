@@ -249,7 +249,7 @@
       }
 
       for (var rule of rules) {
-        var name = this.resolveSelector(rule);
+        var name = this.resolveTextSelector(rule);
         if (name) {
           return name;
         }
@@ -266,7 +266,7 @@
       }
 
       for (var rule of rules) {
-        var text = this.resolveSelector(rule);
+        var text = this.resolveTextSelector(rule);
         if (text) {
           return text;
         }
@@ -285,7 +285,7 @@
         return '';
       }
 
-      var value = this.resolveSelector(text);
+      var value = this.resolveTextSelector(text);
       return value ? value : text;
     },
 
@@ -301,7 +301,7 @@
             }
             break;
           default:
-            if (this.resolveSelector(states[s])) {
+            if (this.resolveTextSelector(states[s])) {
               list.push(s);
             }
           }
@@ -328,6 +328,18 @@
       return set;
     },
 
+    get relations() {
+      var types = new Set();
+      for (var obj of this.sobjs) {
+        if ('rels' in obj) {
+          for (var rel in obj.rels) {
+            types.add(rel);
+          }
+        }
+      }
+      return types;
+    },
+
     is: function(aProp) {
       if (aProp == this.role) {
         return true;
@@ -338,7 +350,7 @@
         if (typeof states[aProp] == 'function') {
           return states[aProp](this.DOMNode);
         }
-        return states[aProp] && this.resolveSelector(states[aProp]);
+        return states[aProp] && this.resolveTextSelector(states[aProp]);
       }
 
       return !!this.to(aProp);
@@ -359,12 +371,40 @@
     },
 
     relativeOf: function(aType) {
-      var rels = this.prop('rels');
-      if (!rels || !rels[aType])
-        return null;
+      for (var obj of this.sobjs) {
+        if ('rels' in obj) {
+          var rel = obj.rels[aType];
+          if (rel) {
+            var selectors = typeof rel == 'string' ? [ rel ] : rel;
+            for (var s of selectors) {
+              var items = this.resolveNodeSelector(s);
+              if (items && items[0]) {
+                return items[0].accessibleElement;
+              }
+            }
+          }
+        }
+      }
+      return null;
+    },
 
-      var items = this.resolveNodeSelector(rels[aType]);
-      return items[0] && items[0].accessibleElement;
+    relativeOfAll: function(aType) {
+      var nodes = [];
+      for (var obj of this.sobjs) {
+        if ('rels' in obj) {
+          var rel = obj.rels[aType];
+          if (rel) {
+            var selectors = typeof rel == 'string' ? [ rel ] : rel;
+            for (var s of selectors) {
+              var items = this.resolveNodeSelector(s);
+              if (items && items[0]) {
+                nodes.push(items[0].accessibleElement);
+              }
+            }
+          }
+        }
+      }
+      return nodes;
     },
 
     to: function (aPattern) {
@@ -461,36 +501,20 @@
     /**
      * Returns a text corresponding to the given text selector.
      */
-    resolveSelector: function (aSelector) {
-      // :idrefs
-      var match = aSelector.match(/\:idrefs\((.+)\)/);
-      if (match) {
-        var text = '';
-        if (this.DOMNode.hasAttribute(match[1])) {
-          var ids = this.DOMNode.getAttribute(match[1]).split();
-          for (var id of ids) {
-            var el = document.getElementById(id);
-            if (el) {
-              text += el.textContent;
-            }
-          }
-        }
-        return text;
-      }
+    resolveTextSelector: function (aSelector) {
+      var text = '';
 
-      // :id
-      if (aSelector.indexOf(':id') != -1 && this.DOMNode.hasAttribute('id')) {
-        var text = '';
-        var selector = aSelector.replace(':id', `'${this.DOMNode.getAttribute('id')}'`);
-        var nodes = document.querySelectorAll(selector);
-        for (var i = 0; i < nodes.length; ++i) { // Chrome doesn't like 'for of' on NodeList
+      var nodes = this.resolveNodeSelector(aSelector);
+      if (nodes) {
+        // Chrome doesn't like 'for of' on NodeList.
+        for (var i = 0; i < nodes.length; ++i) {
           text += nodes[i].textContent;
         }
         return text;
       }
 
       // :parent
-      match = aSelector.match(/\:parent\((\w+)\)/);
+      var match = aSelector.match(/\:parent\((\w+)\)/);
       if (match) {
         if (this.DOMNode.parentNode.localName === match[1]) {
           return this.DOMNode.parentNode.localName;
@@ -528,7 +552,31 @@
     },
 
     resolveNodeSelector: function(aSelector) {
-      return this.DOMNode.querySelectorAll(aSelector);
+      // :idrefs
+      var match = aSelector.match(/\:idrefs\((.+)\)/);
+      if (match) {
+        var nodes = [];
+        if (this.DOMNode.hasAttribute(match[1])) {
+          var ids = this.DOMNode.getAttribute(match[1]).split();
+          for (var id of ids) {
+            var el = document.getElementById(id);
+            if (el) {
+              nodes.push(el);
+            }
+          }
+        }
+        return nodes;
+      }
+
+      // :id
+      if (aSelector.indexOf(':id') != -1 && this.DOMNode.hasAttribute('id')) {
+        var selector =
+          aSelector.replace(':id', `'${this.DOMNode.getAttribute('id')}'`);
+        return document.querySelectorAll(selector);
+      }
+
+      try { return this.DOMNode.querySelectorAll(aSelector); }
+      catch(e) { return null; }
     }
   };
 }());

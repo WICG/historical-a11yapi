@@ -162,50 +162,7 @@
         continue;
       }
 
-      // Find an object whichever matches the DOM node best.
-      var re =
-        /(?:\:role\((\w+)\))?(?:\s*>\s*)?(?:\*|(\w+))?(?:\[(\w+)(?:\=['"](\w+)['"])?\])?/;
-
-      var parsed = sobj.match.match(re);
-      if (!parsed) {
-        console.log(`Failed to parse the match: ${sobj.match}`);
-      }
-
-      var obj = {
-        role: parsed[1],
-        tag: parsed[2],
-        attr: parsed[3],
-        attrval: parsed[4]
-      };
-
-      var w = 0;
-      if (obj.tag) {
-        if (obj.tag != aNode.localName) {
-          continue;
-        }
-        w++;
-      }
-
-      if (aNode.nodeType === Node.ELEMENT_NODE && obj.attr) {
-        if (obj.attrval) {
-          w = aNode.getAttribute(obj.attr) === obj.attrval ? w + 2 : 0;
-        } else {
-          w = aNode.hasAttribute(obj.attr) ? w + 1 : 0;
-        }
-      }
-
-      if (obj.role) {
-        var node = aNode;
-        var parent = null;
-        do {
-          node = node.parentNode;
-        } while ((parent = A11ementFor(node)));
-
-        if (parent && parent.role === obj.role) {
-          w++;
-        }
-      }
-
+      var w = computeMatchWeight(aNode, sobj.match);
       if (w > weight) {
         matchByWeight = sobj;
         weight = w;
@@ -215,6 +172,56 @@
     if (matchByWeight) {
       aList.push(matchByWeight);
     }
+  }
+
+  function computeMatchWeight(aNode, aStr)
+  {
+    // Find an object whichever matches the DOM node best.
+    var re =
+      /(?:\:role\((\w+)\))?(?:\s*>\s*)?(?:\*|(\w+))?(?:\[(\w+)(?:\=['"](\w+)['"])?\])?/;
+
+    var parsed = aStr.match(re);
+    if (!parsed) {
+      console.log(`Failed to parse the match: ${aStr}`);
+      return 0;
+    }
+
+    var obj = {
+      role: parsed[1],
+      tag: parsed[2],
+      attr: parsed[3],
+      attrval: parsed[4]
+    };
+
+    var w = 0;
+    if (obj.tag) {
+      if (obj.tag != aNode.localName) {
+        return w;
+      }
+      w++;
+    }
+
+    if (aNode.nodeType === Node.ELEMENT_NODE && obj.attr) {
+      if (obj.attrval) {
+        w = aNode.getAttribute(obj.attr) === obj.attrval ? w + 2 : 0;
+      } else {
+        w = aNode.hasAttribute(obj.attr) ? w + 1 : 0;
+      }
+    }
+
+    if (obj.role) {
+      var node = aNode;
+      var parent = null;
+      do {
+        node = node.parentNode;
+      } while ((parent = A11ementFor(node)));
+
+      if (parent && parent.role === obj.role) {
+        w++;
+      }
+    }
+
+    return w;
   }
 
 
@@ -418,8 +425,54 @@
       return null;
     },
 
-    get actions() {},
-    activate: function () {},
+    get actions() {
+      var set = new Set();
+      var actions = this.prop('actions');
+      if (actions) {
+        for (var a in actions) {
+          var obj = {
+            name: a,
+            description: a.description,
+            toString: function() { return a; }
+          };
+          set.add(obj);
+        }
+      }
+      return set;
+    },
+    activate: function (aAction, aParam) {
+
+    },
+    interactionsOf: function(aAction, aDevice) {
+      var interactions = new Set();
+      var actions = this.prop('actions');
+      if (actions) {
+        for (var a in actions) {
+          if (aAction && aAction != 'any' && aAction != a) {
+            continue;
+          }
+
+          for (var i of actions[a].interactions) {
+            if ('match' in i && computeMatchWeight(this.DOMNode, i.match) == 0) {
+              continue;
+            }
+            if (aDevice && aDevice != 'any' && aDevice != i.device) {
+              continue;
+            }
+
+            var obj = {
+              code: this.resolveTextSelector(i.code) || i.code,
+              device: i.device,
+              action: a,
+              type: i.type,
+              toString: function() { return this.code; }
+            };
+            interactions.add(obj);
+          }
+        }
+      }
+      return interactions;
+    },
 
     get parent() {
       //parentNode will eventually be 'null' as we walk up the tree
@@ -524,8 +577,9 @@
 
       // :attr
       match = aSelector.match(/\:attr\((.+)\)/);
-      if (match) {
-        return this.DOMNode.getAttribute(match[1]);
+      if (match && this.DOMNode.hasAttribute(match[1])) {
+        return aSelector.replace(/\:attr\((.+)\)/,
+                                 this.DOMNode.getAttribute(match[1]));
       }
 
       // :prop

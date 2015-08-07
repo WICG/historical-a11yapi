@@ -44,8 +44,15 @@
               {
                   name:       "Alexander Surkov"
               ,   url:        "http://mozilla.org/"
-              ,   mailto:     "you@example.org"
-              ,   company:    "mozilla"
+              ,   mailto:     "surkov.alexander@gmail.com"
+              ,   company:    "Mozilla"
+              ,   companyURL: "http://mozilla.com/"
+              },
+              {
+                  name:       "Marcos Caceres"
+              ,   url:        "http://mozilla.org/"
+              ,   mailto:     "mcaceres@mozilla.com"
+              ,   company:    "Mozilla"
               ,   companyURL: "http://mozilla.com/"
               },
           ],
@@ -346,9 +353,9 @@ interface AccessibleElement {
   AccessibleElement? relativeOf(DOMString type);
   sequence&lt;AccessibleElement&gt; relativeOfAll(DOMString type);
 
-  readonly attribute ActionMap actions;
+  readonly attribute Actions actions;
   void activate(DOMString action);
-  readonly attribute InteractionMap interactions;
+  Interactions interactionsOf(optional DOMString action, optional DOMString device);
 
   readonly attribute AccessibleElement? parent;
   readonly attribute AccessibleChildren children;
@@ -622,6 +629,103 @@ if (al.is("cell")) {
       </section>
       <section>
         <h3>
+          <code>actions</code> attribute
+        </h3>
+        <p>
+          Returns a set of all actions exposed by the <a>accessible
+          element</a>. Returned object implements <code>Actions</code>
+          interface.
+        </p>
+        <div class="note">
+          An <a>accessible element</a> may expose number of actions, for
+          example, a tree item accessible typically has two <a title=
+          "action">actions</a>: <code>activate</code>, which makes the tree
+          item focused, and <code>expand</code> / <code>collapse</code> action,
+          which expands or collapses its subtree.
+        </div>
+        <div class="note">
+          Here's a demo list of possible <a title="action">actions</a>:
+          <dl>
+            <dt>
+              <code>activate</code>
+            </dt>
+            <dd>
+              Exposed on accessible elements that may be activated. Accessible
+              elements may use other names for this action to emphasize the
+              semantics they expose. For example, <code>jump</code> on links,
+              <code>press</code> on buttons, <code>check</code> and
+              <code>uncheck</code> on checkboxes. Accessible element may
+              provide more than one action. For example, tree item can provide
+              <code>select</code> / <code>unselect</code> as its primary action
+              and <code>expand</code> / <code>collapse</code> as secondary.
+              Tree column may implement <code>sort</code> action.
+            </dd>
+            <dt>
+              <code>focus</code>
+            </dt>
+            <dd>
+              Focus on an accessible element. May be different from "activate"
+              action, for example, in case of buttons where "activate" means
+              press.
+            </dd>
+            <dt>
+              <code>scroll</code>
+            </dt>
+            <dd>
+              Scrolls an accessible element into view, optionally takes
+              coordinates relative the element to scroll the view to. Extra
+              parameter: delta of <code>ScrollDelta</code>.
+            </dd>
+            <dt>
+              <code>drag</code> and <code>drop</code>
+            </dt>
+            <dd>
+              Used to start dragging and dropping the content related to the
+              accessible element the action is invoked on.
+            </dd>
+            <dt>
+              <code>zoomin</code> and <code>zoomout</code>
+            </dt>
+            <dd>
+              Zooms in/out the content corresponding the accessible the action
+              is invoked on. Extra parameters: ratio of double, optional step
+              of double, optional
+            </dd>
+            <dt>
+              <code>undo</code> and <code>redo</code>
+            </dt>
+            <dd>
+              Performs clipboard operations on the accessible element of the
+              editable content.
+            </dd>
+          </dl>
+        </div>
+      </section>
+      <section>
+        <h3>
+          <code>activate</code> method
+        </h3>
+        <p>
+          Invokes the given <a>action</a> on the <a>accessible element</a>.
+        </p>
+        <div class="note">
+          The method may take extra information to invoke an <a>action</a>. For
+          example, <code>zoomin</code> / <code>zoomout</code> actions may go
+          with zoom ratio or a zoom step parameters to control the zoom.
+        </div>
+      </section>
+      <section>
+        <h3>
+          <code>interactionsOf</code> method
+        </h3>
+        <p>
+          Returns a list of all interactions for given <a>action</a> and device
+          if provided. Returned object implements <code>Interactions</code>
+          interface.
+        </p>
+      </section>
+      <section>
+        <h3>
           <code>parent</code> attribute
         </h3>
         <p>
@@ -644,8 +748,12 @@ if (al.is("cell")) {
       </section>
       <section>
         <h3>
-          attribute
+          <code>DOMNode</code> attribute
         </h3>
+        <p>
+          Returns a DOM node associated with this <a>accessible element</a> if
+          any.
+        </p>
       </section>
     </section>
     <section>
@@ -810,18 +918,156 @@ for (let state of al.states) {
     </section>
     <section>
       <h2>
-        Dependencies
+        <code>Actions</code> interface
       </h2>
       <p>
-        The following definitions are in the [[!HTML]] specification:
+        a set-like object listing all <a title="action">actions</a> exposed by
+        the <a>accessible element</a>. Implementation is not required to
+        compute any value until requested.
       </p>
-      <ul>
-        <li>
-          <a href=
-          "http://www.w3.org/TR/html5/dom.html#interactive-content"><dfn>interactive
-          content</dfn></a>
-        </li>
-      </ul>
+      <pre class="idl">
+interface Actions {
+  readonly setlike&lt;Action&gt;;
+};
+</pre>
+    </section>
+    <section>
+      <h2>
+        <code>Action</code> interface
+      </h2>
+      <p>
+        an object representing an <a>action</a> on an <a>accessible
+        element</a>.
+      </p>
+      <section>
+        <h3>
+          <code>name</code> attribute
+        </h3>
+        <p>
+          The <a>action</a> name.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>description</code> attribute
+        </h3>
+        <p>
+          A localized description of the <a>action</a>.
+        </p>
+      </section>
+      <pre class="idl">
+interface Action {
+  stringifier readonly attribute DOMString name;
+  readonly attribute DOMString description;
+};
+</pre>
+      <section class="informative">
+        <h3>
+          Example of usage
+        </h3>
+        <p>
+          An example of a script logging all available actions on the
+          accessible element.
+        </p>
+        <pre class="example highlight">
+        var set = accElm.actions;
+if (set.size() == 0) {
+  console.log("no actions on accessible element");
+} else {
+  console.log("accessible element has " + set.size() + " actions");
+  set.forEach(action =&gt; say(action.description));
+}
+</pre>
+      </section>
+    </section>
+    <section>
+      <h2>
+        <code>Interactions</code> interface
+      </h2>
+      <p>
+        a set-like object listing all <a title="interaction">interactions</a>
+        exposed by the <a>accessible element</a>. Implementation is not
+        required to compute any value until requested.
+      </p>
+      <pre class="idl">
+interface Interactions {
+  readonly setlike&lt;Interaction&gt;;
+  boolean hasAnyOf(DOMString ... interaction);
+};
+</pre>
+      <section>
+        <h3>
+          <code>hasAnyOf</code> method
+        </h3>
+        <p>
+          Returns true if any of the given interaction codes is supported on
+          the <a>accessible element</a>.
+        </p>
+      </section>
+    </section>
+    <section>
+      <h2>
+        <code>Interaction</code> interface
+      </h2>
+      <p>
+        an object representing an <a>interaction</a> used to invoke an
+        <a>action</a> on an <a>accessible element</a>.
+      </p>
+      <pre class="idl">
+interface Interaction {
+stringifier readonly attribute DOMString code;
+readonly attribute DOMString device;
+readonly attribute DOMString type;
+};
+</pre>
+      <section>
+        <h3>
+          <code>code</code> attribute
+        </h3>
+        <p>
+          A string representation of the <a>interaction</a>.
+        </p>
+        <div class="note">
+          An example of <code>code</code> value is <code>shift + alt + A</code>
+          for accesskey, or <code>swipe</code> geasture for touch device.
+        </div>
+      </section>
+      <section>
+        <h3>
+          <code>device</code> attribute
+        </h3>
+        <p>
+          A device the <a>interaction</a> is associated with.
+        </p>
+      </section>
+      <section>
+        <h3>
+          <code>type</code> attribute
+        </h3>
+        <p>
+          A string value revealing a nature of the <a>interaction</a>. For
+          example, it can be used to give a hint to a screen reader whether the
+          interaction is not standard one and should be announced to the user,
+          or about any conditions that should be met to trigger it, i.e.
+          whether interaction is global or a control has to have the focus.
+        </p>
+      </section>
+      <section class="informative">
+        <h3>
+          Example of usage
+        </h3>
+        <p>
+          An example of a script logging all available interactions for each
+          action on the accessible element.
+        </p>
+        <pre class="example highlight">
+var actions = al.actions;
+actions.forEach(action =&gt; { var codes = al.interactionsOf(action);
+                               console.log(action);
+                               codes.forEach(c =&gt; console.log(c.description));
+                          });
+</pre>
+      </section>
     </section>
     <section>
       <h2>
@@ -836,6 +1082,21 @@ interface AccessibleChildren {
   iterable&lt;AccessibleElement&gt;;
 };
 </pre>
+    </section>
+    <section>
+      <h2>
+        Dependencies
+      </h2>
+      <p>
+        The following definitions are in the [[!HTML]] specification:
+      </p>
+      <ul>
+        <li>
+          <a href=
+          "http://www.w3.org/TR/html5/dom.html#interactive-content"><dfn>interactive
+          content</dfn></a>
+        </li>
+      </ul>
     </section>
     <section class='appendix'>
       <h2>

@@ -38,6 +38,7 @@ window.Inspector = {
     this.uiProp('Description', aAl.description);
     this.uiProp('Text', aAl.text);
 
+    // states
     var states = aAl.states;
     if (states.size) {
       var str = '';
@@ -52,6 +53,7 @@ window.Inspector = {
       this.uiProp('States', str);
     }
 
+    // attributes
     var attrs = aAl.attributes;
     if (attrs.size) {
       var str = '';
@@ -66,6 +68,7 @@ window.Inspector = {
       this.uiProp('Attributes', str);
     }
 
+    // patterns
     var patterns = aAl.patterns;
     if (patterns.size) {
       var str = '';
@@ -87,9 +90,10 @@ window.Inspector = {
       }
     }
 
+    // relations
     var rels = aAl.relations;
     if (rels.size) {
-      var html = "<pre>Relations: ";
+      var html = '<pre>Relations: ';
       for (var r of rels) {
         var als = aAl.relativeOfAll(r);
         if (als.length) {
@@ -103,8 +107,24 @@ window.Inspector = {
           }
         }
       }
-      html += "</pre>";
+      html += '</pre>';
       this.propsEl.innerHTML += html;
+    }
+
+    // actions
+    var actions = aAl.actions;
+    console.log(actions.size);
+    if (actions.size) {
+      var str = '';
+      for (var a of actions) {
+        str += `${a} (`;
+        var interactions = aAl.interactionsOf(a);
+        for (var i of interactions) {
+          str += `${i.device}: ${i}; `;
+        }
+        str += ')';
+      }
+      this.uiProp("Actions", str);
     }
   },
 

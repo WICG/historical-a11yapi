@@ -51,7 +51,23 @@ var HTMLSemantics = {
       }
     },
     text: ':content',
-    actions: ['jump']
+    actions: {
+      jump: {
+        description: 'jump',
+        interactions: [
+          {
+            code: 'click',
+            device: 'mouse'
+          },
+          {
+            match: '[accesskey]',
+            code: 'control+alt+:attr(accesskey)',
+            device: 'keyboard',
+            type: 'accesskey'
+          }
+        ]
+      }
+    }
   },
 
   a_menuitem: {

@@ -124,7 +124,7 @@
       <p>
         The API provides bunch of interfaces that are used to express the
         semantics of web content in a way that assistive technologies (AT)
-        knows how to deal with. Also it provides ability to search and traverse
+        knows how to deal with. Also it provides the ability to search and traverse
         the content and interact with it. It has a way to extend existing
         semantics of the markup, and add new semantics for inaccessible content
         like drawings made using the <code>canvas</code> element. Each piece of
@@ -137,7 +137,7 @@
         </h3>
         <p>
           An <dfn>assistive technology</dfn> or <dfn>AT</dfn> is software that
-          provides an improved user experience for different users types
+          provides an improved user experience for different types of users
           including people with disabilities. It can be in the form of a native
           application, or web application (e.g., zoom tool), or service (e.g.,
           speech-to-text).
@@ -147,14 +147,14 @@
           content. For example, <a>interactive content</a> in [[!HTML]].
         </p>
         <p>
-          An <dfn>accessible element</dfn> is an object expressing the
-          semantics of a <a>content entity</a>. The object is represented by
+          An <dfn data-lt="accessible elements">accessible element</dfn> is an object expressing the
+          semantics of a <a>content entity</a>. Such objects are represented by
           the <code>AccessibleElement</code> interface.
         </p>
         <p>
           A <dfn>role</dfn> of an <a>accessible element</a> identifies the
           function of the accessible element to assistive technology (e.g.,
-          such as "button", "textbox", etc. See also [[!WAI-ARIA]] roles).
+          "button", "textbox", etc. See also [[!WAI-ARIA]] roles).
         </p>
         <p>
           A <dfn>name</dfn> of an <a>accessible element</a> is a primary human
@@ -163,10 +163,10 @@
           element</a> to the user.
         </p>
         <p>
-          A <dfn>description</dfn> of an <a>accessible element</a> is secondary
+          A <dfn>description</dfn> of an <a>accessible element</a> is a secondary
           human readable property of an <a>accessible element</a>. It's used to
-          describe and provide more detailed information than <a>name</a> to
-          the user about <a>content entity</a>, the accessible element was
+          provide more detailed information than <a>name</a> to
+          the user about a <a>content entity</a> the <a>accessible element</a> was
           created for (e.g., a tool tip).
         </p>
         <p>
@@ -175,16 +175,16 @@
         </p>
         <p>
           An <a>accessible element</a> has a set of <dfn>states</dfn>, which is
-          represented by <code>Set</code> like object. Conceptually, each one
+          represented by  a <code>Set</code>-like object. Conceptually, each one
           of these <dfn>states</dfn> is a boolean that represents the state the
           content entity is currently in. For example, if a [[!HTML]]
           <code>button</code> element is in the focused state (e.g., the user
-          has focused the button by tabbing to it), then its accessible element
+          has focused the button by tabbing to it), then its <a>accessible element</a>
           will have "<code>focused</code>" state in its <a>accessible
           states</a>.
         </p>
         <p>
-          An <dfn>attribute</dfn> of an <a>accessible element</a> is property
+          An <dfn>attribute</dfn> of an <a>accessible element</a> is a property
           that provides extra information about its <a>content entity</a>. For
           example, autocomplete feature on an <code>input</code> element would
           map to <code>autocomplete</code> attribute with possible values
@@ -193,40 +193,39 @@
         <p>
           A <dfn>pattern</dfn> of an <a>accessible element</a> expresses the
           associated semantics of the <a>content entity</a> that is not
-          expressed by means of <code>AccessibleElement</code> interface.
+          expressed by means of the <code>AccessibleElement</code> interface.
         </p>
         <p>
           A <a>accessible element</a> can have one or more <dfn>relations</dfn>
-          to other accessible elements. Each relation has a <dfn>relation
+          to other <a>accessible elements</a>. Each relation has a <dfn>relation
           type</dfn> that expresses its semantics. Relations of an accessible
           objects are represented by objects that implement the
-          <code>RelationMap</code> interface.
-        </p>
-        <p>
-          An <dfn>action</dfn> of an <a>accessible element</a> is an action
-          supported by the <a>content entity</a>. An action can be performed on
-          a content entity by the user (e.g., a button click). Accessible
-          actions are represented by objects that implement the
           <code>Set</code> interface.
         </p>
         <p>
-          An <dfn>interaction</dfn> is device dependent interaction, such as
+          An <dfn>user action</dfn> of an <a>accessible element</a> is an action
+          supported by the <a>content entity</a>. An user action can be performed on
+          a content entity by the user or the user agent via script (e.g., a button click).
+          In the API, user actions are represented by objects that implement the
+          <code>Set</code> interface.
+        </p>
+        <p>
+          A <dfn>device-dependent interaction</dfn> includes things like
           keyboard shortcut or mouse gesture used to invoke the <a>action</a>.
-          Interactions on an <a>accessible element</a> are represented by
+          In the API, a device-dependent interaction is represented by the <a>Interaction</a> interface. All supported <a>device-dependent interactions</a> on an <a>accessible element</a> are represented by
           objects that implement the <code>InteractionMap</code> interface.
         </p>
         <p>
-          An <dfn>accessible tree</dfn> is a tree of <a title=
-          "accessible element">accessible elements</a> associated to each other
+          An <dfn data-lt="accessible trees">accessible tree</dfn> is a tree of <a>accessible elements</a> associated to each other
           by a parent-child relationship.
         </p>
         <p>
           An <dfn>accessible parent</dfn> of the referred <a>accessible
-          object</a> is its parent in the <a>accessible tree</a>.
+          element</a> is its parent in the <a>accessible tree</a>.
         </p>
         <p>
           An <dfn>accessible child</dfn> of the referred <a>accessible
-          object</a> are its child accessible elements in the <a>accessible
+          element</a> are its child accessible elements in the <a>accessible
           tree</a>. It is represented by the <code>AccessibleChildren</code>
           interface.
         </p>
@@ -236,15 +235,12 @@
           that has an associated <a>accessible element</a>.
         </p>
         <p>
-          An <dfn>accessible position</dfn> is a point in the content if it's
-          presented in one-dimensional way, that can be entirely and
-          sequentially traversed with a minimal step of a semantic change. For
-          example, a position can be placed at a control element or in text of
-          a paragraph. User focus can be described by <a>accessible
-          position</a>.
+          An <dfn>accessible position</dfn> is a point in the content when it's
+          presented in one-dimensional way, that can be semantically
+          traversed. For example, paragraph text can be traversed by words, or traversing the document using HTML's outlining algorithm. User focus can also be described by an <a>accessible position</a>; for example tabbing from one HTML input element to another within a form.
         </p>
         <p>
-          An <dfn>accessible pin</dfn> is an object representing <a>accessible
+          An <dfn>accessible pin</dfn> is an object representing an <a>accessible
           position</a> and implementing <code>AccessiblePin</code> interface.
         </p>
       </section>
@@ -254,9 +250,8 @@
         </h3>
         <p>
           Each <a>content entity</a> has an associated <a>accessible
-          object</a>. Each <a>accessible element</a> is described by accessible
-          properties like <a>role</a>, <a>name</a>, <a title=
-          "relation">relations</a> etc.
+          element</a>. Each <a>accessible element</a> is described by accessible
+          properties like <a>role</a>, <a>name</a>, <a>relations</a> etc.
         </p>
         <figure>
           <img src="images/props.png" alt="accessible properties diagram">
@@ -265,7 +260,7 @@
           </figcaption>
         </figure>
         <p>
-          <a title="accessible element">accessible element</a> can be related
+          <a>Accessible elements</a> can be related
           to each other by number of different types.
         </p>
         <figure>
@@ -276,11 +271,11 @@
           </figcaption>
         </figure>
         <p>
-          All <a title="accessible element">accessible elements</a> are
-          organized into <a title="accessible tree">accessible trees</a>, in
-          other words all accessible elements are supposed to stay in
+          All <a>accessible elements</a> are
+          organized into <a>accessible trees</a>. In
+          other words, all <a>accessible elements</a> are supposed to stay in
           parent-child relationship. The <a>assistive technology</a> can
-          traverse the document by traversing its accessible tree.
+          traverse the document by traversing its <a>accessible tree</a>.
         </p>
         <figure>
           <img src="images/tree.png" alt="accessible tree">
@@ -292,7 +287,7 @@
           The browser exposes semantics of the content to the <a>assistive
           technology</a> like screen readers or screen magnifiers softwares via
           platform APIs like ATK, IAccessible2, UIA, NSAccessibility or this
-          one. The assistive technology communicates back to the content by the
+          API. The <a>assistive technology</a> communicates back to the content by the
           browser via platform APIs.
         </p>
         <figure>
@@ -310,7 +305,7 @@
       </h2>
       <p>
         Assistive technology, or the developer, can request an <a>accessible
-        object</a> from a [[!DOM]] <code>Node</code> if the <code>Node</code>
+        element</a> from a [[!DOM]] <code>Node</code> if the <code>Node</code>
         is accessible, i.e. it expresses semantics to the assistive technology.
       </p>
       <pre class="idl">
@@ -323,8 +318,8 @@ partial interface Node {
           <code>AccessibleElement</code> attribute
         </h3>
         <p>
-          The <code>AccessibleElement</code> attribute the user agent MUST
-          return the accessible element associated with this <code>Node</code>
+          The <code>AccessibleElement</code> attribute
+          return the <a>accessible element</a> associated with this <code>Node</code>
           (if any). Otherwise, it returns <code>null</code>.
         </p>
       </section>
@@ -340,10 +335,10 @@ interface AccessibleElement {
   attribute DOMString description;
   attribute DOMString text;
 
-  readonly attribute Set states;
-  readonly attribute Set attributes;
-  readonly attribute Set patterns;
-  readonly attribute Set relations;
+  readonly attribute AccessibleSet states;
+  readonly attribute AccessibleSet attributes;
+  readonly attribute AccessibleSet patterns;
+  readonly attribute AccessibleSet relations;
 
   boolean is(DOMString something);
   any get(DOMString attribute);
@@ -375,7 +370,7 @@ interface AccessibleElement {
         </p>
         <div class="note">
           For the author convenience the attribute value may be a space
-          separated list of <a title="role">roles</a>. This is useful when an
+          separated list of <a>roles</a>. This is useful when an
           <a>accessible element</a> should express semantics of both roles but
           the taxonomy misses a separate role for that. For example, a check
           menu item <a>accessible element</a> may have <code>menuitem
@@ -505,11 +500,11 @@ interface AccessibleElement {
         </h3>
         <p>
           The <dfn><code>relations</code></dfn> attribute represents the
-          <a title="relation type">relation types</a> on the <a>accessible
+          <a>relation types</a> on the <a>accessible
           element</a>.
         </p>
         <p>
-          Returns a <code>Set</code> for all <a title="relation type">relation
+          Returns a <code>Set</code> for all <a>relation
           types</a> that the <a>accessible element</a> has. The implementation
           is not required to pre-compute any of the relations.
         </p>
@@ -520,10 +515,9 @@ interface AccessibleElement {
         </h3>
         <p>
           Return true if the <a>accessible element</a> complies with the given
-          value. A <a title="states">state</a>, <a>role</a> or <a>pattern</a>
+          value. A <a>state</a>, <a>role</a> or <a>pattern</a>
           can be used as a value. In case of <a>states</a> the method returns
-          true if the <a>accessible element</a> has the given <a title=
-          "states">state</a>. In case of <a>role</a> the method returns true if
+          true if the <a>accessible element</a> has the given <a>state</a>. In case of <a>role</a> the method returns true if
           the <a>accessible element</a> <a>role</a> belongs to a role taxonomy
           of the given <a>role</a> value. In case of <a>pattern</a> value the
           method returns true if the <a>accessible element</a> supports the
@@ -621,7 +615,7 @@ if (al.is("cell")) {
           <code>relativeOfAll</code> method
         </h3>
         <p>
-          Returns all relative <a title="accessible element">accessible
+          Returns all relative <a>accessible
           elements</a> of the given relation type for this <a>accessible
           element</a>. If there are no relatives then empty sequence is
           returned.
@@ -638,13 +632,12 @@ if (al.is("cell")) {
         </p>
         <div class="note">
           An <a>accessible element</a> may expose number of actions, for
-          example, a tree item accessible typically has two <a title=
-          "action">actions</a>: <code>activate</code>, which makes the tree
+          example, a tree item accessible typically has two <a>actions</a>: <code>activate</code>, which makes the tree
           item focused, and <code>expand</code> / <code>collapse</code> action,
           which expands or collapses its subtree.
         </div>
         <div class="note">
-          Here's a demo list of possible <a title="action">actions</a>:
+          Here's a demo list of possible <a>actions</a>:
           <dl>
             <dt>
               <code>activate</code>
@@ -743,7 +736,7 @@ if (al.is("cell")) {
         </p>
         <p>
           Returns <code>AccessibleChildren</code> object containing all child
-          <a title="accessible element">accessible elements</a>.
+          <a>accessible elements</a>.
         </p>
       </section>
       <section>
@@ -891,12 +884,12 @@ callback Criteria = boolean (AccessibleElement);
       </h2>
       <p>
         an object to list values of a given accessible property of an
-        accessible element, for example, <a>states</a>, <a title=
-        "attribute">attributes</a> or <a title="pattern">patterns</a>.
+        accessible element, for example, <a>states</a>, <a>attributes</a> or <a>patterns</a>.
         Implementation is not required to compute any value until requested.
       </p>
       <pre class="idl">
-interface Set {
+[NoInterfaceObject]
+interface AccessibleSet {
   readonly setlike&lt;DOMString&gt;;
 };
 </pre>
@@ -921,7 +914,7 @@ for (let state of al.states) {
         <code>Actions</code> interface
       </h2>
       <p>
-        a set-like object listing all <a title="action">actions</a> exposed by
+        a set-like object listing all <a>actions</a> exposed by
         the <a>accessible element</a>. Implementation is not required to
         compute any value until requested.
       </p>
@@ -985,7 +978,7 @@ if (set.size() == 0) {
         <code>Interactions</code> interface
       </h2>
       <p>
-        a set-like object listing all <a title="interaction">interactions</a>
+        a set-like object listing all <a>interactions</a>
         exposed by the <a>accessible element</a>. Implementation is not
         required to compute any value until requested.
       </p>
@@ -1010,7 +1003,7 @@ interface Interactions {
         <code>Interaction</code> interface
       </h2>
       <p>
-        an object representing an <a>interaction</a> used to invoke an
+        An object representing an <a>interaction</a> used to invoke an
         <a>action</a> on an <a>accessible element</a>.
       </p>
       <pre class="idl">

@@ -344,10 +344,10 @@ interface AccessibleElement {
   attribute DOMString description;
   attribute DOMString text;
 
-  readonly attribute AccessibleIt states;
-  readonly attribute AccessibleIt attributes;
-  readonly attribute AccessibleIt patterns;
-  readonly attribute AccessibleIt relations;
+  readonly attribute AccessibleIterable states;
+  readonly attribute AccessibleIterable attributes;
+  readonly attribute AccessibleIterable patterns;
+  readonly attribute AccessibleIterable relations;
 
   boolean is(DOMString ... something);
   any get(DOMString attribute);
@@ -431,7 +431,7 @@ interface AccessibleElement {
           <a>states</a>.
         </p>
         <p>
-          Returns an <code>interable</code> for all states exposed on the
+          Returns an <code>iterable</code> for all states exposed on the
           accessible element. The implementation is not required to pre-compute
           any of the states.
         </p>
@@ -491,7 +491,7 @@ interface AccessibleElement {
           <a>patterns</a>.
         </p>
         <p>
-          Returns an <code>interable</code> for all patterns exposed on the
+          Returns an <code>iterable</code> for all patterns exposed on the
           accessible element. The implementation is not required to pre-compute
           any of the values.
         </p>
@@ -546,7 +546,7 @@ interface AccessibleElement {
         </p>
         <pre class="example highlight">
 let al = document.getElementById("button").a11ement;
-console.log(al.is("widget", focusable"));
+console.assert(al.is("widget", "focusable"), "should a focusable widget");
 </pre>
       </section>
       <section>
@@ -684,12 +684,13 @@ if (al.is("cell")) {
               accessible element the action is invoked on.
             </dd>
             <dt>
-              <code>zoomin</code> and <code>zoomout</code>
+              <code>zoom</code>
             </dt>
             <dd>
-              Zooms in/out the content corresponding the accessible the action
-              is invoked on. Extra parameters: ratio of double, optional step
-              of double, optional
+              Zooms the content corresponding the accessible the action
+              is invoked on. Extra parameters: ratio of double. Values great than
+              1 zooms in the area, values lesser than zooms out it. 1 brings the area
+              to its normal size.
             </dd>
             <dt>
               <code>undo</code> and <code>redo</code>
@@ -710,9 +711,26 @@ if (al.is("cell")) {
         </p>
         <div class="note">
           The method may take extra information to invoke an <a>action</a>. For
-          example, <code>zoomin</code> / <code>zoomout</code> actions may go
-          with zoom ratio or a zoom step parameters to control the zoom.
+          example, <code>zoom</code> action may take a zoom ratio as a
+          parameter to change the zoom.
         </div>
+        <p>
+          The example below zooms the document by ratio of 2 and then back to
+          normal.
+        </p>
+        <pre class="example highlight">
+var al = document.a11ement;
+al.activate("zoom", 2);
+al.activate("zoom", 1);
+</pre>
+        <p>
+          The second example scrolls the page to (400, 100) point and then
+          scrolls it 2 pages down.
+        </p>
+        <pre class="example highlight">
+al.activate("scroll", { x: 400, y: 100 });
+al.activate("scroll", { mode: "page", count: 2 });
+</pre>
       </section>
       <section>
         <h3>
@@ -897,7 +915,7 @@ callback Criteria = boolean (AccessibleElement);
       </p>
       <pre class="idl">
 [NoInterfaceObject]
-interface AccessibleIt {
+interface AccessibleIterable {
   readonly iterable&lt;DOMString&gt;;
 };
 </pre>

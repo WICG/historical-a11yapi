@@ -344,10 +344,10 @@ interface AccessibleElement {
   attribute DOMString description;
   attribute DOMString text;
 
-  readonly attribute AccessibleSet states;
-  readonly attribute AccessibleSet attributes;
-  readonly attribute AccessibleSet patterns;
-  readonly attribute AccessibleSet relations;
+  readonly attribute AccessibleIt states;
+  readonly attribute AccessibleIt attributes;
+  readonly attribute AccessibleIt patterns;
+  readonly attribute AccessibleIt relations;
 
   boolean is(DOMString ... something);
   any get(DOMString attribute);
@@ -431,9 +431,9 @@ interface AccessibleElement {
           <a>states</a>.
         </p>
         <p>
-          Returns a <code>Set</code> for all states exposed on the accessible
-          element. The implementation is not required to pre-compute any of the
-          states.
+          Returns an <code>interable</code> for all states exposed on the
+          accessible element. The implementation is not required to pre-compute
+          any of the states.
         </p>
       </section>
       <section>
@@ -450,9 +450,9 @@ interface AccessibleElement {
           accessible element.
         </p>
         <p>
-          Returns a <code>Set</code> for all object attributes exposed on the
-          accessible element. The implementation is not required to pre-compute
-          any of the attributes.
+          Returns an <code>iterable</code> for all object attributes exposed on
+          the accessible element. The implementation is not required to
+          pre-compute any of the attributes.
         </p>
         <div class="note">
           <p>
@@ -491,9 +491,9 @@ interface AccessibleElement {
           <a>patterns</a>.
         </p>
         <p>
-          Returns a <code>Set</code> for all patterns exposed on the accessible
-          element. The implementation is not required to pre-compute any of the
-          values.
+          Returns an <code>interable</code> for all patterns exposed on the
+          accessible element. The implementation is not required to pre-compute
+          any of the values.
         </p>
         <div class="note">
           Each markup can come with own set of supported patterns. A single
@@ -512,9 +512,9 @@ interface AccessibleElement {
           <a>relation types</a> on the <a>accessible element</a>.
         </p>
         <p>
-          Returns a <code>Set</code> for all <a>relation types</a> that the
-          <a>accessible element</a> has. The implementation is not required to
-          pre-compute any of the relations.
+          Returns an <code>iterable</code> for all <a>relation types</a> that
+          the <a>accessible element</a> has. The implementation is not required
+          to pre-compute any of the relations.
         </p>
       </section>
       <section>
@@ -541,8 +541,8 @@ interface AccessibleElement {
           pattern.
         </div>
         <p>
-          In the example <code>is</code> method calls on a HTML button
-          return true.
+          In the example <code>is</code> method calls on a HTML button return
+          true.
         </p>
         <pre class="example highlight">
 let al = document.getElementById("button").a11ement;
@@ -897,8 +897,8 @@ callback Criteria = boolean (AccessibleElement);
       </p>
       <pre class="idl">
 [NoInterfaceObject]
-interface AccessibleSet {
-  readonly setlike&lt;DOMString&gt;;
+interface AccessibleIt {
+  readonly iterable&lt;DOMString&gt;;
 };
 </pre>
       <section class="informative">

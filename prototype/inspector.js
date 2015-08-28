@@ -1,7 +1,7 @@
 window.Inspector = {
   attach: function(aTreeEl, aPropsEl, aInspectedEl) {
     aTreeEl.innerHTML = '<ul></ul>';
-    this.iterateTree(aInspectedEl.accessibleElement, aTreeEl.firstChild);
+    this.iterateTree(aInspectedEl.a11ement, aTreeEl.firstChild);
     this.propsEl = aPropsEl;
   },
 

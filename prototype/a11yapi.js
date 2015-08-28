@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  Object.defineProperty(Node.prototype, 'accessibleElement', {
+  Object.defineProperty(Node.prototype, 'a11ement', {
     get: function () {
       return A11ementFor(this);
     }
@@ -386,7 +386,7 @@
             for (var s of selectors) {
               var items = this.resolveNodeSelector(s);
               if (items && items[0]) {
-                return items[0].accessibleElement;
+                return items[0].a11ement;
               }
             }
           }
@@ -405,7 +405,7 @@
             for (var s of selectors) {
               var items = this.resolveNodeSelector(s);
               if (items && items[0]) {
-                nodes.push(items[0].accessibleElement);
+                nodes.push(items[0].a11ement);
               }
             }
           }

@@ -170,8 +170,7 @@
       <pre class="idl">
 partial interface AccessibleDocument {
   Taxon? taxonOf(DOMString taxonomy, DOMString name);
-  [ Throws ]
-  void import(TaxoLibrary library);
+  void import(TaxaLibrary library);
 };
 </pre>
       <section>
@@ -186,20 +185,18 @@ partial interface AccessibleDocument {
           implements <code>RoleTaxon</code> interface.
         </p>
         <p>
-          The example logs out all parents of the <code>bibliography</code>
-          role.
+          The example logs out the whole role taxonomy.
         </p>
         <pre class="example highlight">
-function logParents(taxon) {
-  for (let parent of taxon.parents) {
-    console.log(parent.name);
-    console.log(':');
-    logParents(parent);
-    console.log(';');
+function logRoleTree(taxon, level) {
+  for (let i = 0; i &lt; taxon.children.length; i++) {
+    var child = taxon.children[i];
+    console.log(`{$level} ${child.name}`);
+    logRoleTree(child, `${level}.${i}`);
   }
 }
-let taxon = document.a11ement.taxonOf('role', 'bibliography');
-logParents(taxon);
+let taxon = document.a11ement.taxonOf('role', 'base');
+logRoleTree(taxon);
 </pre>
       </section>
       <section>
@@ -258,23 +255,23 @@ var library = {
   roles: {
     '*': {
       states: [
-        'highlighable', 'highlighted'
+        'highlightable', 'highlighted'
       ],
       relations: [
-        'hihglight-comment-for',
-        'hihglight-commented-by'
+        'highlight-comment-for',
+        'highlight-commented-by'
       ]
     }
   },
   states: {
-    highlighable: { },
+    highlightable: { },
     highlighted: {
       description: 'user choice'
     }
   },
   relations: {
-    'hihglight-comment-for': { },
-    'hihglight-commented-by': {
+    'highlight-comment-for': { },
+    'highlight-commented-by': {
       description: 'commented by'
     }
   }
@@ -284,19 +281,23 @@ var library = {
     </section>
     <section>
       <h2>
-        TaxoLibrary dictionary
+        TaxaLibrary dictionary
       </h2>
       <p>
         A collection of taxonomies extensions to the document's taxonomies.
       </p>
       <pre class="idl">
-dictionary TaxoLibrary {
+dictionary TaxaLibrary {
   DOMString id;
-  object roles;
-  object states;
-  object attributes;
-  object actions;
-  object relations;
+  TaxaStack roles;
+  TaxaStack states;
+  TaxaStack attributes;
+  TaxaStack actions;
+  TaxaStack relations;
+};
+
+interface TaxaStack {
+  readonly maplike&lt;DOMString, TaxonDict&gt;;
 };
 </pre>
       <section>
@@ -314,9 +315,11 @@ dictionary TaxoLibrary {
         </h3>
         <p>
           The <code>roles</code> attribute represents a collection of
-          <a>roles</a> added by the library into browser's taxonomy. A role is
-          described by a dictionary repeating of <code>RoleTaxon</code>
-          interface.
+          <a>roles</a> injected into the browser's taxonomy by the library.
+          Returned object implements <code>TaxaStack</code> interface, which is
+          a map with <a>role</a> as a key and its description object as a
+          value. The role description object implements
+          <code>RoleTaxonDict</code> dictionary.
         </p>
       </section>
       <section>
@@ -325,9 +328,11 @@ dictionary TaxoLibrary {
         </h3>
         <p>
           The <code>states</code> attribute represents a collection of
-          <a>states</a> added by the library into browser's taxonomy. A state
-          is described by a dictionary repeating properties of
-          <code>Taxon</code> interface.
+          <a>states</a> injected into the browser's taxonomy by the library.
+          Returned object implements <code>TaxaStack</code> interface, which is
+          a map with <a>state</a> as a key and its description object as a
+          value. The description object implements <code>TaxonDict</code>
+          dictionary.
         </p>
       </section>
       <section>
@@ -336,9 +341,11 @@ dictionary TaxoLibrary {
         </h3>
         <p>
           The <code>attributes</code> attribute represents a collection of
-          <a>attributes</a> added by the library into browser's taxonomy. An
-          attribute is described by a dictionary repeating properties of
-          <code>Taxon</code> interface.
+          <a>attributes</a> injected into the browser's taxonomy by the
+          library. Returned object implements <code>TaxaStack</code> interface,
+          which is a map with <a>attribute</a> as a key and its description
+          object as a value. The description object implements
+          <code>TaxonDict</code> dictionary.
         </p>
       </section>
       <section>
@@ -347,11 +354,42 @@ dictionary TaxoLibrary {
         </h3>
         <p>
           The <code>relations</code> attribute represents a collection of
-          <a>relations</a> added by the library into browser's taxonomy. A
-          relation is described by a dictionary repeating properties of
-          <code>Taxon</code> interface.
+          <a>relations</a> injected into the browser's taxonomy by the library.
+          Returned object implements <code>TaxaStack</code> interface, which is
+          a map with <a>relation</a> as a key and its description object as a
+          value. The description object implements <code>TaxonDict</code>
+          dictionary.
         </p>
       </section>
+    </section>
+    <section>
+      <h2>
+        TaxonDict interface
+      </h2>
+      <p>
+        An object describing a taxon.
+      </p>
+      <pre class="idl">
+dictionary TaxonDict {
+  DOMString description;
+};
+
+dictionary RoleTaxonDict : TaxonDict {
+  sequence&lt;DOMString&gt; parents;
+  sequence&lt;DOMString&gt; children;
+
+  sequence&lt;DOMString&gt; owns;
+  sequence&lt;DOMString&gt; states;
+  sequence&lt;DOMString&gt; attributes;
+  sequence&lt;DOMString&gt; relations;
+  sequence&lt;DOMString&gt; actions;
+};
+</pre>
+      <p>
+        <code>TaxonDict</code> and <code>RoleTaxonDict</code> dictionaries is a
+        replication of corresponding <code>Taxon</code> and
+        <code>RoleTaxon</code> interfaces.
+      </p>
     </section>
     <section>
       <h2>
@@ -361,7 +399,6 @@ dictionary TaxoLibrary {
         An object containing a name and description of a taxon.
       </p>
       <pre class="idl">
-[NoInterfaceObject]
 interface Taxon {
   stringifier readonly attribute DOMString name;
   readonly attribute DOMString description;

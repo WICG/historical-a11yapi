@@ -487,8 +487,7 @@ interface AccessibleElement {
           <code>patterns</code> attribute
         </h3>
         <p>
-          The <dfn><code>patterns</code></dfn> attribute represents the
-          <a>patterns</a>.
+          The <code>patterns</code> attribute represents the <a>patterns</a>.
         </p>
         <p>
           Returns an <code>iterable</code> for all patterns exposed on the
@@ -687,10 +686,10 @@ if (al.is("cell")) {
               <code>zoom</code>
             </dt>
             <dd>
-              Zooms the content corresponding the accessible the action
-              is invoked on. Extra parameters: ratio of double. Values great than
-              1 zooms in the area, values lesser than zooms out it. 1 brings the area
-              to its normal size.
+              Zooms the content corresponding the accessible the action is
+              invoked on. Extra parameters: ratio of unsigned double. Values
+              greater than 1 zoom in the area, values lesser than 1 zoom out
+              it. 1 brings the area to its normal size.
             </dd>
             <dt>
               <code>undo</code> and <code>redo</code>
@@ -772,6 +771,195 @@ al.activate("scroll", { mode: "page", count: 2 });
           Returns a DOM node associated with this <a>accessible element</a> if
           any.
         </p>
+      </section>
+    </section>
+    <section>
+      <h2>
+        Patterns
+      </h2>
+      <p>
+        The section lists general propose <a>patterns</a>, that can be exposed
+        by elements from any markup.
+      </p>
+      <section>
+        <h3>
+          <code>AccessibleItem</code>
+        </h3>
+        <p>
+          The <code>AccessibleItem</code> interface is exposed by accessible
+          elements that represent an article in an enumeration, like a list,
+          combobox, tree or grid widgets.
+        </p>
+        <pre class="idl">
+interface AccessibleItem {
+  readonly attribute AccessibleElement? widget;
+  readonly attribute unsigned long index;
+  readonly attribute unsigned long size;
+  readonly attribute unsigned long level;
+};
+</pre>
+        <section>
+          <h4>
+            <code>widget</code> attribute
+          </h4>
+          <p>
+            Returns an accessible element for a widget associated with this
+            item. For example, it returns an HTML select accessible element for
+            HTML option, and HTML table accessible for its HTML td element.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>index</code> attribute
+          </h4>
+          <p>
+            Returns an index of the item within its group.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>size</code> attribute
+          </h4>
+          <p>
+            Returns the amount of items of the group this item belongs to.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>level</code> attribute
+          </h4>
+          <p>
+            Returns the level of the item if applicable. For example, it returns
+            a nesting level in case of tree items.
+          </p>
+        </section>
+      </section>
+      <section>
+        <h3>
+          <code>AccessibleCell</code> interface
+        </h3>
+        <p>
+          The <code>AccessibleCell</code> interface is exposed by <a>accessible
+          elements</a> created for cell-like elements. For example, cells of
+          table, grid or tree table widgets.
+        </p>
+        <pre class="idl">
+interface AccessibleCell {
+  readonly attribute unsigned long rowIndex;
+  readonly attribute unsigned long colIndex;
+  readonly attribute unsigned long rowSpan;
+  readonly attribute unsigned long colSpan;
+};
+</pre>
+        <section>
+          <h4>
+            <code>rowIndex</code> attribute
+          </h4>
+          <p>
+            Returns a row index of the cell within the table.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>colIndex</code> attribute
+          </h4>
+          <p>
+            Returns a column index of the cell within the table.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>rowSpan</code> attribute
+          </h4>
+          <p>
+            Returns a rows number the cell is spanned to.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>colSpan</code> attribute
+          </h4>
+          <p>
+            Returns a columns number the cell is spanned to.
+          </p>
+        </section>
+      </section>
+      <section>
+        <h3>
+          <code>AccessibleValue</code> interface
+        </h3>
+        <p>
+          The <code>AccessibleValue</code> interface is exposed by
+          <a>accessible elements</a> having numerical value. Examples are
+          slider or meter widgets.
+        </p>
+        <pre class="idl">
+interface AccessibleValue {
+  readonly attribute double max;
+  readonly attribute double min;
+  readonly attribute double low;
+  readonly attribute double high;
+  readonly attribute double optimum;
+  readonly attribute double step;
+  readonly attribute double value;
+};
+</pre>
+        <section>
+          <h4>
+            <code>max</code> attribute
+          </h4>
+          <p>
+            Returns an upper bound of a range.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>min</code> attribute
+          </h4>
+          <p>
+            Returns a lower bound of a range.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>low</code> attribute
+          </h4>
+          <p>
+            Returns a high limit of a low range.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>high</code> attribute
+          </h4>
+          <p>
+            Returns a low limit of a high range.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>optimum</code> attribute
+          </h4>
+          <p>
+            Returns an optimum value in gauge.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>step</code> attribute
+          </h4>
+          <p>
+            Returns a minimal possible increment of value.
+          </p>
+        </section>
+        <section>
+          <h4>
+            <code>step</code> attribute
+          </h4>
+          <p>
+            Returns a current value of the widget.
+          </p>
+        </section>
       </section>
     </section>
     <section>
